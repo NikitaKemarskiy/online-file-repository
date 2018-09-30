@@ -31,9 +31,17 @@ router.get('/', function(req, res) { // Main page
 		if (!req.session.authorized) { // User isn't authorized -> to the sign_in page
 
 			res.redirect('sign_in');
-		}  else {
+		}  else { // User is authorized -> to the main page
 
-			res.end(req.session.email);
+			res.header('StatusCode', '200');
+			res.header('Content-Type', 'text/html; charset=utf-8');
+
+			let storage_size = 100;
+
+			res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
+				user_email: req.session.email, 
+				storage_size: storage_size.toString() + 'Gb' 
+			});
 		}
 	}
 
@@ -46,6 +54,8 @@ router.get('/sign_in', function(req, res) { // Sign in page
 	res.header('Content-Type', 'text/html; charset=utf-8');
 
 	res.render(path.join(process.cwd(), 'public/html/sign_in.hbs'));
+
+	console.dir(req.session);
 });
 
 router.get('/sign_in/:error_message', function(req, res) { // Sign in page with an error message
@@ -115,6 +125,14 @@ router.post('/sign_up_handler', function(req, res) { // Sign up post handler
 			res.redirect(`/sign_up/${error_message}`);
 		}
 	});
+});
+
+router.get('/sign_out_handler', function(req, res) { // Sign out handler
+
+	req.session.email = undefined; // Deleting user's session data and making him unauthorized
+	req.session.authorized = undefined;
+
+	res.redirect('/sign_in');
 });
 
 // Socket.io

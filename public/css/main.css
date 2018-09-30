@@ -27,7 +27,7 @@ div.storage {
 }
 
 div.header {
-	height: 7%;
+	height: 68px;
 	padding-left: 1.5%;
 	padding-right: 2%;
 	box-sizing: border-box;
@@ -56,13 +56,16 @@ div.header-button {
 	padding-top: 15px !important;
 }
 
-div.header-button button {
+div.header-button a {
+	text-decoration: none;
+	display: inline-block;
 	font-size: 18px;
 	border-radius: 4px;
-	padding: 0 15px; 
+	padding: 6px 15px; 
 	height: 35px;
 	color: #fff;
 	background-color: transparent;
+	box-sizing: border-box;
 	border: 1px solid #fff;	
 }
 

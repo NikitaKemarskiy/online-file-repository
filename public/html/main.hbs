@@ -8,7 +8,7 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script type="text/javascript" src="../js/sign_in.js"></script>
+	<script type="text/javascript" src="../js/main.js"></script>
 </head>
 <body>
 	
@@ -17,19 +17,19 @@
 		
 		<!-- User's email -->
 		<div class="header-text header-email">
-			email@url.com
+			{{user_email}}
 		</div>
 		
 		<!-- Storage size and sign out button -->
 		<div class="header-block">
 			
-			<div class="header-text header-storage">119GB</div>
+			<div class="header-text header-storage">{{storage_size}}</div>
 
 			<div class="header-text header-button">
 
-				<button>
+				<a href="sign_out_handler">
 					Sign out
-				</button>
+				</a>
 
 			</div>
 
