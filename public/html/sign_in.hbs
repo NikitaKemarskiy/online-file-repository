@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Sign in</title>
+	
+	<link rel="stylesheet" type="text/css" href="../css/sign_in_up.css">
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/sign_in.js"></script>
+</head>
+<body>
+	
+	<div class="block">
+		
+		<div class="form">
+
+			<form class="sign_form" method="post" action="/sign_in_handler">
+				
+				<div class="form_wrapper form_header">
+					<h3>Sign in</h3>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="text" name="email" placeholder="Email" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="password" name="password" placeholder="Password" required>
+				</div>
+				
+				{{#if error}}
+				<div class="form_wrapper error">
+					<p>Error: {{error_message}}</p>
+				</div>
+				{{/if}}
+				
+				<div class="form_wrapper form_submit">
+					<input type="submit" value="Submit">
+				</div>
+
+			</form>
+		
+		</div>
+
+		<div class="link">
+			<p>Don't have an account? You can <a href="/sign_up">sign up</a> for free</p>
+		</div>
+
+	</div>
+
+</body>
+</html>

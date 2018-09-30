@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Storage</title>
+	
+	<link rel="stylesheet" type="text/css" href="../css/main.css">
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/sign_in.js"></script>
+</head>
+<body>
+	
+	<!-- Header -->
+	<div class="header">
+		
+		<!-- User's email -->
+		<div class="header-text header-email">
+			email@url.com
+		</div>
+		
+		<!-- Storage size and sign out button -->
+		<div class="header-block">
+			
+			<div class="header-text header-storage">119GB</div>
+
+			<div class="header-text header-button">
+
+				<button>
+					Sign out
+				</button>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<!-- User's storage -->
+	<div class="block">
+
+		<div class="storage">
+			
+			<ul>
+				<li class="folder"><div class="storage-element">Folder 1</div></li>
+				<li class="folder"><div class="storage-element">Folder 2</div></li>
+				<li class="file"><div class="storage-element">File 1</div></li>
+				<li class="file"><div class="storage-element">File 2</div></li>
+				<li class="file"><div class="storage-element">File 3</div></li>
+			</ul>
+
+		</div>
+
+	</div>
+
+</body>
+</html>
