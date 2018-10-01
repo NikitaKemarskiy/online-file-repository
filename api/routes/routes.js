@@ -46,8 +46,8 @@ const router_init = function(io) {
 					storage_size: '' 
 				});
 
-				storage.show_path(req.session.email).then(function(result) {
-					//...
+				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
+					console.log(items); // Items is an array with directory items
 				});
 			}
 		}
