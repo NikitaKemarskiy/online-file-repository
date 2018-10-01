@@ -1,6 +1,5 @@
 // Modules
 const express = require('express');
-const socket_io = require('socket.io');
 const fs = require('fs');
 const http = require('http');
 const body_parser = require('body-parser');
@@ -31,7 +30,9 @@ const session_options = {
 // Initialization
 const server = express(); // Server
 const http_server = http.Server(server); // Socket.io server
-const io = socket_io(http_server); // Socket.io
+
+// Socket.io
+const io = require('./api/functions/sockets.js').listen(http_server);
 
 // Middleware
 server.engine('hbs', hbs({ extname: 'hbs' }));
@@ -62,4 +63,3 @@ http_server.listen(config.server.port, config.server.host, function(error) {
 	}
 });
 
-// Socket.io

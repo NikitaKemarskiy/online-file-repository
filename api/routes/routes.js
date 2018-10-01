@@ -135,7 +135,5 @@ router.get('/sign_out_handler', function(req, res) { // Sign out handler
 	res.redirect('/sign_in');
 });
 
-// Socket.io
-
 // Exports
 module.exports = router;
