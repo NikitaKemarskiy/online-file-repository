@@ -6,22 +6,20 @@ const is_email = require('isemail');
 // Initialization
 const router = express.Router();
 
-// Configuration
-const config = require('../../config/config.js');
-
-// Variables
-
 // Functions
 const authorization = require('../functions/authorization.js');
 const storage = require('../functions/storage.js');
 const socket = require('../functions/socket.js');
 
-// MongoDB
-const database = require('../database/database.js');
-database.connect(config.database.host, config.database.port, config.database.name);
+// Routing initialization function
+const router_init = function(io, config) {
 
-// Export initialization function
-const router_init = function(io) {
+	// MongoDB
+	const database = require('../database/database.js');
+	database.connect(config.database.host, config.database.port, config.database.name);
+
+	// Socket.io
+	io.on('connection', socket.connection);
 
 	// Routes
 	router.get('/', function(req, res) { // Main page
@@ -41,13 +39,13 @@ const router_init = function(io) {
 
 				let storage_size = 100;
 
-				res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
-					user_email: req.session.email, 
-					storage_size: '' 
-				});
-
 				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
-					console.log(items); // Items is an array with directory items
+					
+					res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
+						user_email: req.session.email, 
+						storage_size: '',
+						items: items
+					});
 				});
 			}
 		}
@@ -137,8 +135,6 @@ const router_init = function(io) {
 
 		res.redirect('/sign_in');
 	});
-
-	io.on('connection', socket.connection);
 
 	return router;
 }

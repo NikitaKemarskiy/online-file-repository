@@ -4,7 +4,7 @@ const check_sign_in = function(email, password, database) { // Check if sign in 
 	return new Promise(function(resolve, reject) {
 
 		database.check_item(email, password).then(function(result) {
-
+		
 			if (result) { // User is in a database
 				resolve(true);
 			} else { // User isn't in a database

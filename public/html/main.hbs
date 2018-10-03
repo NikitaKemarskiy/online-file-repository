@@ -43,11 +43,9 @@
 		<div class="storage">
 			
 			<ul>
-				<li class="folder"><div class="storage-element">Folder 1</div></li>
-				<li class="folder"><div class="storage-element">Folder 2</div></li>
-				<li class="file"><div class="storage-element">File 1</div></li>
-				<li class="file"><div class="storage-element">File 2</div></li>
-				<li class="file"><div class="storage-element">File 3</div></li>
+				{{#each items}}
+					<li class="{{this.type}}"><div class="storage-element">{{this.name}}</div></li>
+				{{/each}}
 			</ul>
 
 		</div>
