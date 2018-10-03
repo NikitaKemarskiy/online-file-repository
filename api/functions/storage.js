@@ -41,7 +41,7 @@ const parse_items = function(directory_path, items) { // Parse files in a direct
 										name: items[i]
 									});
 								}
-								fill_items_array(i + 1, items_array);
+								fill_items_array(i + 1, items_array); // Recursive call to get info about the next item
 							}
 
 						});
@@ -101,16 +101,8 @@ const show_storage = function(email) { // Show main storage directory
 
 			if (result) { // User's storage already exists
 
-				fs.readdir(user_path, function(error, items) {
-
-					if (error) {
-						console.error(`Error: ${error.message}`);
-						resolve([]);
-					} else {
-						parse_items(user_path, items).then(function(items_array) {
-							resolve(items_array);
-						});
-					}
+				show_directory(email).then(function(items_array) {
+					resolve(items_array);
 				});
 			} else { // User's storage doesn't exist
 
@@ -129,7 +121,23 @@ const show_storage = function(email) { // Show main storage directory
 };
 
 const show_directory = function(directory_path) { // Show directory
-	//...
+
+	let user_path = path.join(STORAGE_PATH, directory_path);
+
+	return new Promise(function(resolve, reject) {
+
+		fs.readdir(user_path, function(error, items) {
+
+			if (error) {
+				console.error(`Error: ${error.message}`);
+				resolve([]);
+			} else {
+				parse_items(user_path, items).then(function(items_array) {
+					resolve(items_array);
+				});
+			}
+		});
+	});
 }
 
 // Exports
