@@ -143,3 +143,4 @@ const show_directory = function(directory_path) { // Show directory
 
 // Exports
 module.exports.show_storage = show_storage;
+module.exports.show_directory = show_directory;
