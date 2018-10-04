@@ -10,7 +10,7 @@ const socket = function(io, storage) {
 
 			storage.show_directory(path).then(function(items) { // Getting files that are in the directory
 					
-				io.sockets.connected[socket.id].emit('show_directory', { items }); // Sending these files to user with show_directory event
+				io.sockets.connected[socket.id].emit('show_directory', { items: items }); // Sending these files to user with show_directory event
 			});
 		});
 	}
