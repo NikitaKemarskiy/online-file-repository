@@ -41,6 +41,7 @@ const parse_items = function(directory_path, items) { // Parse files in a direct
 										name: items[i]
 									});
 								}
+								
 								fill_items_array(i + 1, items_array); // Recursive call to get info about the next item
 							}
 

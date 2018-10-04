@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 // Variables
-const user_schema = new mongoose.Schema({
+const user_schema = new mongoose.Schema({ // Schema for users in database
 	login: {
 		type: String,
 		required: true
@@ -20,7 +20,7 @@ const user_schema = new mongoose.Schema({
 const user = mongoose.model('user', user_schema);
 
 // Functions
-let connect = function(host, port, name) { // Connecting to the database
+let connect = function(host, port, name) { // Connect to the database
 
 	mongoose.connect(`mongodb://${host}:${port}/${name}`, { useNewUrlParser: true }) 
 		.then(function() { // Success

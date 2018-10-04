@@ -7,9 +7,9 @@ const is_email = require('isemail');
 const router = express.Router();
 
 // Functions
-const authorization = require('../functions/authorization.js');
-const storage = require('../functions/storage.js');
-const socket = require('../functions/socket.js');
+const authorization = require('../functions/authorization.js'); // Authorization functions
+const storage = require('../functions/storage.js'); // Work with storage functions
+const socket_constructor = require('../functions/socket.js'); // Socket.io functions constructor
 
 // Routing initialization function
 const router_init = function(io, config) {
@@ -17,6 +17,9 @@ const router_init = function(io, config) {
 	// MongoDB
 	const database = require('../database/database.js');
 	database.connect(config.database.host, config.database.port, config.database.name);
+
+	// Socket.io functions
+	const socket = new socket_constructor(io, storage);
 
 	// Socket.io
 	io.on('connection', socket.connection);

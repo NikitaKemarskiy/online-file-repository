@@ -1,8 +1,10 @@
 // Config constructor
 const config = function(session) {
 	
+	// Store for sessions
 	const MongoStore = require('connect-mongo')(session);
 
+	// Config
 	this.database = {
 		name: 'file_storage', // database name
 		host: 'localhost', // database host
