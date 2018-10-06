@@ -8,6 +8,7 @@ $(document).ready(function() {
 	// jQuery elements
 	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains files
 	const path_paragraph = $('.path p').eq(0);
+	const download_button = $('.path .button');
 
 	// Functions
 	const parse_path_into_string = function(path) { // Function that parses path array into string format
@@ -46,6 +47,33 @@ $(document).ready(function() {
 		files_list.text(''); // Clearing user's storage at the page
 	}
 
+	const check_selected_items = function() {
+
+		let files_list_items = $('.storage ul li');
+		let is_selected = false;
+
+		for (let i = 0; i < files_list_items.length; i++) {
+
+			if (files_list_items.eq(i).hasClass('selected')) {
+				is_selected = true;
+				break;
+			} 
+		}
+
+		if (is_selected) {
+			
+			if (download_button.hasClass('unactive')) {
+				download_button.removeClass('unactive');
+			}
+		} else {
+
+			if (!download_button.hasClass('unactive')) {
+				download_button.addClass('unactive');	
+			}
+			
+		}
+	}
+
 	// Click events
 	files_list.on('click', 'li', function() { // Click at the storage item
 
@@ -67,6 +95,8 @@ $(document).ready(function() {
 			$(this).closest('li').removeClass('selected'); // Remove selected class of the parental li element
 		}
 
+		check_selected_items();
+
 		if (!event) { // Prevent click event for parental li element (storage item)
 			event = window.event;
 		}
@@ -86,5 +116,7 @@ $(document).ready(function() {
 			
 			files_list.append(`<li class="${data.items[i].type}"><label><input type="checkbox"><div class="storage-element">${data.items[i].name}</div></label></li>`);
 		}
+
+		check_selected_items();
 	});
 });
