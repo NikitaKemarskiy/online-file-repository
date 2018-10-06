@@ -3,14 +3,14 @@ const path = require('path');
 const fs = require('fs');
 
 // Variables
-const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users');
+const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
 // Functions
-const parse_items = function(directory_path, items) { // Parse files in a directory into an array with objects
+const parse_items = function(directory_path, items) { // Function that parses files in a directory into an array with objects
 
 	return new Promise(function(resolve, reject) {
 
-		let items_array_parsed = []; // Array for items im special order (folders first, files second)
+		let items_array_parsed = []; // Array for items in special order (folders first, files second)
 
 		const items_array_filled = function() { // Promise function for filling the items array 
 
@@ -20,9 +20,9 @@ const parse_items = function(directory_path, items) { // Parse files in a direct
 
 					if (i < items.length) {
 
-						let item_path = path.join(directory_path, items[i]);
+						let item_path = path.join(directory_path, items[i]); // Current item path
 
-						fs.stat(item_path, function(error, stats) {
+						fs.stat(item_path, function(error, stats) { // Getting info about current item
 
 							if (error) {
 								console.error(`Error: ${error.message}`);
@@ -77,7 +77,7 @@ const parse_items = function(directory_path, items) { // Parse files in a direct
 	});
 }
 
-const check_if_directory_exists = function(path) { // Check if directory exists
+const check_if_directory_exists = function(path) { // Function that checks if directory exists
 
 	return new Promise(function(resolve, reject) {
 		
@@ -92,15 +92,15 @@ const check_if_directory_exists = function(path) { // Check if directory exists
 	});
 }
 
-const show_storage = function(email) { // Show main storage directory
+const show_storage = function(email) { // Function that shows main storage directory
 	
 	return new Promise(function(resolve, reject) {
 		
 		let user_path = path.join(STORAGE_PATH, email);
 
-		check_if_directory_exists(user_path).then(function(result) {
+		check_if_directory_exists(user_path).then(function(result) { // Checking if user's storage already exists
 
-			if (result) { // User's storage already exists
+			if (result) { // User's storage already exists -> show it
 
 				show_directory(email).then(function(items_array) {
 					resolve(items_array);
@@ -121,7 +121,7 @@ const show_storage = function(email) { // Show main storage directory
 	});
 };
 
-const show_directory = function(directory_path) { // Show directory
+const show_directory = function(directory_path) { // Function that shows directory
 
 	let user_path = path.join(STORAGE_PATH, directory_path);
 

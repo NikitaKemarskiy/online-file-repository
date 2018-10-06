@@ -1,5 +1,5 @@
 // Functions
-const check_sign_in = function(email, password, database) { // Check if sign in info valid
+const check_sign_in = function(email, password, database) { // Function that checks if sign in info valid
 	
 	return new Promise(function(resolve, reject) {
 
@@ -14,7 +14,7 @@ const check_sign_in = function(email, password, database) { // Check if sign in 
 	});
 }
 
-const check_sign_up = function(email, login, password, confirm_password, database, is_email) { // Check if sign up data valid
+const check_sign_up = function(email, login, password, confirm_password, database, is_email) { // Function that checks if sign up data valid
 
 	return new Promise(function(resolve, reject) {
 
@@ -60,7 +60,7 @@ const check_sign_up = function(email, login, password, confirm_password, databas
 	});
 }
 
-const check_if_exists = function(email, database) { // Check if user already exists
+const check_if_exists = function(email, database) { // Function that checks if user already exists
 
 	return new Promise(function(resolve, reject) {
 
