@@ -21,7 +21,7 @@ $(document).ready(function() {
 		return path_string;
 	}
 
-	const check_directory = function(new_directory) { // Function that changes user's current directory
+	const change_directory = function(new_directory) { // Function that changes user's current directory
 
 		if (new_directory !== '..') { // If user is moving to the subfolder
 
@@ -46,12 +46,32 @@ $(document).ready(function() {
 		files_list.text(''); // Clearing user's storage at the page
 	}
 
-	files_list.on('click', "li", function() { // Click at the storage item
+	// Click events
+	files_list.on('click', 'li', function() { // Click at the storage item
 
 		if (this.classList[0] === 'folder') { // Clicked item is a folder
 
-			socket.emit('show_directory', { path: user_email + check_directory(this.textContent) }); // Go to this folder
+			let folder_name = $(this).children().children('.storage-element').eq(0).text(); // Clicked folder name
+
+			socket.emit('show_directory', { path: user_email + change_directory(folder_name) }); // Go to this folder
 		}
+	});
+
+	files_list.on('click', 'input', function(event) { // Click at the checkbox button
+
+		if(this.checked) { // User selected an item
+
+			$(this).closest('li').addClass('selected'); // Add selected class to the parental li element
+		} else { // User unselected an item
+			
+			$(this).closest('li').removeClass('selected'); // Remove selected class of the parental li element
+		}
+
+		if (!event) { // Prevent click event for parental li element (storage item)
+			event = window.event;
+		}
+    	event.cancelBubble = true;
+    	if (event.stopPropagation) event.stopPropagation();
 	});
 
 	// Socket.io
@@ -59,12 +79,12 @@ $(document).ready(function() {
 
 		if (current_path.length > 1) { // If new folder isn't a root directory
 
-			files_list.append(`<li class="folder"><div class="storage-element">..</div></li>`); // Add an item of the parental folder '..'
+			files_list.append(`<li class="folder"><label><div class="storage-element">..</div></label></li>`); // Add an item of the parental folder '..'
 		}
 
 		for (let i = 0; i < data.items.length; i++) { // Append every sent item in the storage div
 			
-			files_list.append(`<li class="${data.items[i].type}"><div class="storage-element">${data.items[i].name}</div></li>`);
+			files_list.append(`<li class="${data.items[i].type}"><label><input type="checkbox"><div class="storage-element">${data.items[i].name}</div></label></li>`);
 		}
 	});
 });

@@ -23,9 +23,22 @@ div.path {
 }
 
 div.path p {
+	display: inline-block;
 	margin: 0;
 	padding: 0;
 	font-size: 18px;
+}
+
+div.path a.button {
+	float: right;
+	position: relative;
+	top: -3px;
+	background-color: #228b22;
+	border: none;
+}
+
+div.path a.button.unactive {
+	background-color: #228b2266;
 }
 
 div.storage {
@@ -81,7 +94,7 @@ div.header-button {
 	padding-top: 15px !important;
 }
 
-div.header-button a {
+a.button {
 	text-decoration: none;
 	display: inline-block;
 	font-size: 18px;
@@ -117,6 +130,30 @@ div.storage ul li:hover {
 	background-color: #1f383c;
 }
 
+div.storage ul li label {
+	height: 100%;
+	display: block;
+}
+
+div.storage ul li label input {
+	margin: 0;
+	padding: 0;
+}
+ 
+div.storage ul li.folder label input {
+	position: relative;
+	top: -6px;
+}
+
+div.storage ul li.file label input {
+	position: relative;
+	top: -2px;
+}
+
+div.storage ul li div.storage-element {
+	display: inline-block;
+}
+
 div.storage li.folder div.storage-element {
 	position: relative;
 	top: -7px;
@@ -124,7 +161,7 @@ div.storage li.folder div.storage-element {
 
 div.storage li.file div.storage-element {
 	position: relative;
-	top: -4px;
+	top: -3px;
 }
 
 div.storage li.folder div.storage-element:before {
@@ -144,7 +181,7 @@ div.storage li.file div.storage-element:before {
 	width: 30px;
 	height: 26px;
 	position: relative;
-	top: 5px;
+	top: 3.5px;
 	left: -1.5px;
 	margin-right: 10px;
 	display: inline-block;

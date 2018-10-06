@@ -27,7 +27,7 @@
 
 			<div class="header-text header-button">
 
-				<a href="sign_out_handler">
+				<a class="button" href="sign_out_handler">
 					Sign out
 				</a>
 
@@ -40,13 +40,23 @@
 	<!-- User's storage -->
 	<div class="block">
 		
-		<div class="path"><p>path: /</p></div>
+		<div class="path">
+			<p>path: /</p>
+			
+			<a href="" class="button unactive">
+				Download files
+			</a>
+		</div>
 
 		<div class="storage">
 			
 			<ul>
 				{{#each items}}
-					<li class="{{this.type}}"><div class="storage-element">{{this.name}}</div></li>
+					<li class="{{this.type}}">
+						<label>
+							<input type="checkbox"><div class="storage-element">{{this.name}}</div>
+						</label>
+					</li>
 				{{/each}}
 			</ul>
 
