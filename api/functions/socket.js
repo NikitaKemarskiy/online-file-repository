@@ -13,6 +13,12 @@ const socket = function(io, storage) {
 				io.sockets.connected[socket.id].emit('show_directory', { items: items }); // Sending these files to user with show_directory event
 			});
 		});
+
+		socket.on('download_directory', function(data) {
+
+			// data.path - directory from which user wants to download some files
+			// data.items - array with files names
+		});
 	}
 }
 

@@ -146,7 +146,8 @@ $(document).ready(function() {
 		if (!$(this).hasClass('unactive')) { // If any items are selected
 			
 			let items = download.get_selected_items(); // Getting an object with the current path and the array with selected items   
-			console.dir(items);
+			
+			socket.emit('download_directory', items);
 		}
 	});
 
