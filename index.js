@@ -32,7 +32,7 @@ server.use('/', routes); // Routing
 
 server.use(function(req, res) { // Error 404
 
-  	res.status(404).send("Error 404: page not found");
+	res.status(404).send("Error 404: page not found");
 });
 
 // Express.js

@@ -29,7 +29,7 @@ div.path p {
 	font-size: 18px;
 }
 
-div.path a.button {
+div.path span.button {
 	float: right;
 	position: relative;
 	top: -3px;
@@ -37,7 +37,11 @@ div.path a.button {
 	border: none;
 }
 
-div.path a.button.unactive {
+div.path span.button:hover {
+	cursor: pointer;
+}
+
+div.path span.button.unactive {
 	background-color: #228b2266;
 }
 
@@ -94,7 +98,7 @@ div.header-button {
 	padding-top: 15px !important;
 }
 
-a.button {
+a.button, span.button {
 	text-decoration: none;
 	display: inline-block;
 	font-size: 18px;
