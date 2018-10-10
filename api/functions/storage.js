@@ -11,51 +11,44 @@ const parse_items = function(directory_path, items) { // Function that parses fi
 	return new Promise(function(resolve, reject) {
 
 		let items_array_parsed = []; // Array for items in special order (folders first, files second)
+		let items_array = [];
 
 		const items_array_filled = function() { // Promise function for filling the items array 
 
 			return new Promise(function(resolve, reject) {
 
-				const fill_items_array = function(i, items_array) { // Recursive function to get info about every file and fill items array with it
+				for (let i = 0; i < items.length; i++) {
 
-					if (i < items.length) {
+					let item_path = path.join(directory_path, items[i]); // Current item path
 
-						let item_path = path.join(directory_path, items[i]); // Current item path
+					fs.stat(item_path, function(error, stats) { // Getting info about current item
 
-						fs.stat(item_path, function(error, stats) { // Getting info about current item
-
-							if (error) {
-								console.error(`Error: ${error.message}`);
-							} else {
-
-								if (stats.isDirectory()) { // Item is a folder
-
-									items_array.push({
-										type: 'folder',
-										name: items[i]
-									});
-								} else if (stats.isFile()) { // Item is a file
-
-									items_array.push({
-										type: 'file',
-										name: items[i]
-									});
-								}
-								
-								fill_items_array(i + 1, items_array); // Recursive call to get info about the next item
+						if (error) {
+							console.error(`Error: ${error.message}`);
+						} else {
+							if (stats.isDirectory()) { // Item is a folder
+								items_array.push({
+									type: 'folder',
+									name: items[i]
+								});
+							} else if (stats.isFile()) { // Item is a file
+								items_array.push({
+									type: 'file',
+									name: items[i]
+								});
 							}
+							
+							if (i === items.length - 1) { // If it's the last file -> resolving the promise
+								resolve(items_array);
+							}
+						}
 
-						});
-					} else {
-						resolve(items_array);
-					} 
+					});
 				}
-
-				fill_items_array(0, []); // Calling the recursive function
 			});
 		}
 
-		items_array_filled().then(function(items_array) {
+		items_array_filled().then(function(items_array) { // After getting all the files stats -> parse it (folder first - files second)
 
 			for (let i = 0; i < items_array.length; i++) { // Filling the parsed items array -> inputing folders firstly
 			

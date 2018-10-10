@@ -14,7 +14,7 @@ const download = { // Functions connected with downloading
 			} 
 		}
 
-		return is_selected;
+		return is_selected; // Returns true if there're any selected items or false if there aren't any selected items
 	},
 
 	get_selected_items: function(current_path, user_email) { // Function that returns an array with selected items data
@@ -52,7 +52,7 @@ const download = { // Functions connected with downloading
 
 	unselect_items: function() { // Function that makes all the selected items unselected
 
-		let files_list_items = $('.storage ul li'); // Items in user's storage
+		let files_list_items = $('.storage ul li'); // Items in the user's storage
 
 		for (let i = 0; i < files_list_items.length; i++) {
 
@@ -66,13 +66,24 @@ const download = { // Functions connected with downloading
 
 	uncheck_checkboxes: function() { // Function that makes all the checked checkboxes unchecked
 
-		let files_list_checkboxes = $('.storage ul li input');
+		let files_list_checkboxes = $('.storage ul li input'); // Checkboxes in the user's storage
 
 		for (let i = 0; i < files_list_checkboxes.length; i++) {
 
-			if (files_list_checkboxes.eq(i).prop('checked')) {
+			if (files_list_checkboxes.eq(i).prop('checked')) { // If checkbox is checked -> uncheck it
 				files_list_checkboxes.eq(i).prop('checked', false);
 			}
+		}
+	},
+
+	change_checkbox_status: function(checkbox) {
+
+		if(checkbox.checked) { // User selected an item
+
+			$(checkbox).closest('li').addClass('selected'); // Add selected class to the parental li element
+		} else { // User unselected an item
+			
+			$(checkbox).closest('li').removeClass('selected'); // Remove selected class of the parental li element
 		}
 	},
 
@@ -133,5 +144,14 @@ const processing = { // Functions for processing some data
 		}
 
 		return path_string;
+	},
+
+	prevent_click_for_parental_element: function(event) {
+
+		if (!event) { // Prevent click event for parental li element (storage item)
+			event = window.event;
+		}
+    	event.cancelBubble = true;
+    	if (event.stopPropagation) event.stopPropagation();
 	}
 };
