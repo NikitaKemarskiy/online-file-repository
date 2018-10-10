@@ -1,4 +1,7 @@
-// Config constructor
+// Modules
+const jszip = require('jszip'); // Module to work with archives
+
+// Socket constructor
 const socket = function(io, storage) {
 
 	// Functions
@@ -14,10 +17,13 @@ const socket = function(io, storage) {
 			});
 		});
 
-		socket.on('download_directory', function(data) {
+		socket.on('zip_files', function(data) {
 
 			// data.path - directory from which user wants to download some files
 			// data.items - array with files names
+			// data.items.item_name - item name
+			// data.items.item_type - item type
+			console.dir(data);
 		});
 	}
 }

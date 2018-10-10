@@ -141,6 +141,12 @@ const show_directory = function(directory_path) { // Function that shows directo
 	});
 }
 
+/*const get_file = function(file_path) {
+
+	return fs.createReadStream(path.join(STORAGE_PATH, file_path));
+}*/
+
 // Exports
 module.exports.show_storage = show_storage;
 module.exports.show_directory = show_directory;
+/*module.exports.get_file = get_file;*/

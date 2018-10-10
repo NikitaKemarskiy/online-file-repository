@@ -1,3 +1,6 @@
+// Modules
+const is_email = require('isemail');
+
 // Functions
 const check_sign_in = function(email, password, database) { // Function that checks if sign in info valid
 	
@@ -14,7 +17,7 @@ const check_sign_in = function(email, password, database) { // Function that che
 	});
 }
 
-const check_sign_up = function(email, login, password, confirm_password, database, is_email) { // Function that checks if sign up data valid
+const check_sign_up = function(email, login, password, confirm_password, database) { // Function that checks if sign up data valid
 
 	return new Promise(function(resolve, reject) {
 

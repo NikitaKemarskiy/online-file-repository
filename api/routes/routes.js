@@ -1,7 +1,6 @@
 // Modules
 const express = require('express');
 const path = require('path');
-const is_email = require('isemail');
 
 // Initialization
 const router = express.Router();
@@ -108,7 +107,7 @@ const router_init = function(io, config) {
 
 	router.post('/sign_up_handler', function(req, res) { // Sign up post handler
 
-		authorization.check_sign_up(req.body.email, req.body.login, req.body.password, req.body.confirm_password, database, is_email).then(function(check_sign_up_result) {
+		authorization.check_sign_up(req.body.email, req.body.login, req.body.password, req.body.confirm_password, database).then(function(check_sign_up_result) {
 
 			if (check_sign_up_result.success) { // Sign up data is valid -> success
 
