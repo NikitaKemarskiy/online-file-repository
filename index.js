@@ -43,6 +43,3 @@ http_server.listen(config.server.port, config.server.host, function(error) {
 		console.log(`Server is listening at ${config.server.host}:${config.server.port}`);
 	}
 });
-
-
-

@@ -43,9 +43,11 @@ const router_init = function(io, config) {
 
 				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
 					
+					console.dir({ items }); // test log
+
 					res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
 						user_email: req.session.email, 
-						storage_size: '',
+						storage_size: ``,
 						items: items
 					});
 				});
@@ -87,7 +89,7 @@ const router_init = function(io, config) {
 
 	router.post('/sign_in_handler', function(req, res) { // Sign in post handler
 		
-		authorization.check_sign_in(req.body.email, req.body.password, database).then(function(result) {
+		authorization.check_sign_in(req.body.email, req.body.password, database).then(function(result) { // Checking sign in data
 
 			if (result) { // User is in a database -> success
 
@@ -107,7 +109,13 @@ const router_init = function(io, config) {
 
 	router.post('/sign_up_handler', function(req, res) { // Sign up post handler
 
-		authorization.check_sign_up(req.body.email, req.body.login, req.body.password, req.body.confirm_password, database).then(function(check_sign_up_result) {
+		authorization.check_sign_up( // Checking sign up data
+			req.body.email,
+			req.body.login,
+			req.body.password,
+			req.body.confirm_password,
+			database
+		).then(function(check_sign_up_result) {
 
 			if (check_sign_up_result.success) { // Sign up data is valid -> success
 

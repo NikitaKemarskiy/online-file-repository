@@ -125,7 +125,9 @@ const show_directory = function(directory_path) { // Function that shows directo
 			if (error) {
 				console.error(`Error: ${error.message}`);
 				resolve([]);
-			} else {
+			} else if (items.length === 0) { // The folder is empty -> resolve empty array
+				resolve([]);
+			} else { // The folder has items -> parse them and resolve array with parsed items
 				parse_items(user_path, items).then(function(items_array) {
 					resolve(items_array);
 				});
@@ -134,12 +136,8 @@ const show_directory = function(directory_path) { // Function that shows directo
 	});
 }
 
-/*const get_file = function(file_path) {
-
-	return fs.createReadStream(path.join(STORAGE_PATH, file_path));
-}*/
-
 // Exports
-module.exports.show_storage = show_storage;
-module.exports.show_directory = show_directory;
-/*module.exports.get_file = get_file;*/
+module.exports = {
+	show_storage,
+	show_directory
+};

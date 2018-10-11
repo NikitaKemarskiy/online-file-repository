@@ -58,7 +58,6 @@ let find_item = function(email) { // Find the item in the database
 		let items_length = 0;
 
 		user.find({ email: email }, function(error, items) {
-
 			if (error) {
 				console.error(`Database search error: ${error.message}`);
 			} else {
@@ -94,7 +93,9 @@ let check_item = function(email, password) { // Check if the item with specific 
 }
 
 // Exports
-module.exports.connect = connect;
-module.exports.add_item = add_item;
-module.exports.find_item = find_item;
-module.exports.check_item = check_item;
+module.exports = {
+	connect,
+	add_item,
+	find_item,
+	check_item
+};
