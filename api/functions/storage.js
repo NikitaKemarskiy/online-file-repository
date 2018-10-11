@@ -10,8 +10,9 @@ const parse_items = function(directory_path, items) { // Function that parses fi
 
 	return new Promise(function(resolve, reject) {
 
+		let items_array = []; // Array for items
 		let items_array_parsed = []; // Array for items in special order (folders first, files second)
-		let items_array = [];
+		let async_calls_counter = 0; // Variable that contains an amount of async calls into the loop
 
 		const items_array_filled = function() { // Promise function for filling the items array 
 
@@ -38,7 +39,9 @@ const parse_items = function(directory_path, items) { // Function that parses fi
 								});
 							}
 							
-							if (i === items.length - 1) { // If it's the last file -> resolving the promise
+							async_calls_counter++;
+
+							if (async_calls_counter === items.length) { // If it's the last file -> resolving the promise
 								resolve(items_array);
 							}
 						}
