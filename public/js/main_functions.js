@@ -35,8 +35,8 @@ const download = { // Functions connected with downloading
 				}
 
 				items_array.push({ // Pushing info about item to the array with selected items
-					item_name: files_list_items.eq(i).children().children('.storage-element').eq(0).text(), // Item name
-					item_type: item_type // Item type (folder or file)
+					name: files_list_items.eq(i).children().children('.storage-element').eq(0).text(), // Item name
+					type: item_type // Item type (folder or file)
 				});
 			} 
 		}

@@ -6,21 +6,39 @@ const fs = require('fs');
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
 // Functions
-const parse_items = function(directory_path, items) { // Function that parses files in a directory into an array with objects
+const sort_items = function(items_array) { // Functions that sorts the items in the special order (folders first, files second)
+
+	let items_array_sorted = []; // Array for items parsed in the special order
+
+	for (let i = 0; i < items_array.length; i++) { // Filling the parsed items array -> inputing folders firstly
+		if (items_array[i].type === "folder") { // If item's type is a folder -> input
+			items_array_sorted.push(items_array[i]);
+		}
+	}
+
+	for (let i = 0; i < items_array.length; i++) { // Filling the parsed items array -> inputing files secondly
+		if (items_array[i].type === "file") { // If item's type is a file -> input
+			items_array_sorted.push(items_array[i]);
+		}
+	}
+
+	return items_array_sorted; // Returning array of sorted items
+}
+
+const parse_items = function(items_path, items) { // Function that parses files in a directory into an array with objects
 
 	return new Promise(function(resolve, reject) {
 
-		let items_array = []; // Array for items
-		let items_array_parsed = []; // Array for items in special order (folders first, files second)
-		let async_calls_counter = 0; // Variable that contains an amount of async calls into the loop
-
 		const items_array_filled = function() { // Promise function for filling the items array 
+
+			let items_array = []; // Array for items
+			let async_calls_counter = 0; // Variable that contains an amount of async calls into the loop
 
 			return new Promise(function(resolve, reject) {
 
 				for (let i = 0; i < items.length; i++) {
 
-					let item_path = path.join(directory_path, items[i]); // Current item path
+					let item_path = path.join(items_path, items[i]); // Current item path
 
 					fs.stat(item_path, function(error, stats) { // Getting info about current item
 
@@ -51,24 +69,9 @@ const parse_items = function(directory_path, items) { // Function that parses fi
 			});
 		}
 
-		items_array_filled().then(function(items_array) { // After getting all the files stats -> parse it (folder first - files second)
-
-			for (let i = 0; i < items_array.length; i++) { // Filling the parsed items array -> inputing folders firstly
-			
-				if (items_array[i].type == "folder") { // If item's type is a folder -> input
-					items_array_parsed.push(items_array[i]);
-				}
-			}
-
-			for (let i = 0; i < items_array.length; i++) { // Filling the parsed items array -> inputing files secondly
-				
-				if (items_array[i].type == "file") { // If item's type is a file -> input
-					items_array_parsed.push(items_array[i]);
-				}
-			}
-
-
-			resolve(items_array_parsed); 
+		items_array_filled().then(function(items_array) { // After getting all the files stats -> sort it (folder first - files second)
+			items_array_sorted = sort_items(items_array);
+			resolve(items_array_sorted);
 		});
 	});
 }
@@ -141,6 +144,7 @@ const show_directory = function(directory_path) { // Function that shows directo
 
 // Exports
 module.exports = {
+	parse_items,
 	show_storage,
 	show_directory
 };
