@@ -57,4 +57,9 @@ $(document).ready(function() {
 
 		download.update_button_status(download_button);
 	});
+
+	socket.on('zip_created', function(data) {
+
+		alert(`Archive was created: ${data.result}`);
+	});
 });

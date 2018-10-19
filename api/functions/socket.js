@@ -14,17 +14,10 @@ const socket = function(io, storage) {
 	// Arhiver functions
 	const archiver = new archiver_constructor(storage);
 
-	/*let archive_path = './out.zip'; // Path to the output archive
-	let items_path = './files'; // Path to the items needed to be zipped
-	let items = ['item1.txt', 'item2.txt', 'folder1']; // Names of the items needed to be zipped
-
-	archiver.write_zip(items_path, items, archive_path).then(function(result) { // Creating a zip archive
-		console.log(result);
-	});*/
-
 	// Functions
 	this.connection = function(socket) {
 
+		// Log to see a new user connected
 		console.log(`User was connected -> ${socket.id}`);
 
 		socket.on('show_directory', function(data) { // Show directory event handler
@@ -42,19 +35,20 @@ const socket = function(io, storage) {
 			// data.items - array with files names
 			// data.items.item_name - item name
 			// data.items.item_type - item type
+
+			// Log to see info about user's request for downloading
 			console.dir(data);
 
 			// Variables
-			let items = [];
 			let items_path = path.join(STORAGE_PATH, data.email, data.path);
 			let archive_path = path.join(ARCHIVES_PATH, 'out.zip'); 
 
-			/*for (let i = 0; i < data.items.length; i++) {
-				items.push(data.items[i].item_name);
-			}*/
-
 			archiver.write_zip(items_path, data.items, archive_path).then(function(result) { // Creating a zip archive
+				
+				// Log to see the path of created archive
 				console.log(result);
+
+				io.sockets.connected[socket.id].emit('zip_created', { result });
 			});
 		});
 	}
