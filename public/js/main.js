@@ -1,10 +1,10 @@
 $(document).ready(function() {
 
-	// Variables
+	// Constants
 	const socket = io(); // Socket initialization
 	const user_email = $('.header-email').eq(0).text().replace(/\s/g, ''); // User's email
 	const current_path = ['/']; // Current storage path
-	
+
 	// jQuery elements
 	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
 	const download_button = $('.path .button'); // Button for downloading files
@@ -37,6 +37,7 @@ $(document).ready(function() {
 			
 			download.unselect_items(); // Unselect all the selected items
 			download.update_button_status(download_button); // Updating button status (active / unactive)
+			download.archive_creating_animation_start(); // Starting the animation of loader spinner
 
 			socket.emit('zip_files', items); // Sending items array to make an archive with them
 		}
@@ -61,5 +62,6 @@ $(document).ready(function() {
 	socket.on('zip_created', function(data) {
 
 		alert(`Archive was created: ${data.result}`);
+		download.archive_creating_animation_stop(); // Stoping the animation of loader spinner
 	});
 });

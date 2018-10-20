@@ -1,7 +1,7 @@
 // Modules
 const path = require('path');
 
-// Variables
+// Constants
 const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 

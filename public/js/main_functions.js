@@ -1,7 +1,8 @@
 // Functions
 const download = { // Functions connected with downloading
 
-	check_selected_items: function() { // Function that checks are there any selected items to download
+	// Function that checks are there any selected items to download
+	check_selected_items: function() { 
 
 		let files_list_items = $('.storage ul li'); // Items in user's storage
 		let is_selected = false;
@@ -17,7 +18,8 @@ const download = { // Functions connected with downloading
 		return is_selected; // Returns true if there're any selected items or false if there aren't any selected items
 	},
 
-	get_selected_items: function(current_path, user_email) { // Function that returns an array with selected items data
+	// Function that returns an array with selected items data
+	get_selected_items: function(current_path, user_email) { 
 
 		let download_path = processing.parse_path_into_string(current_path);
 		let files_list_items = $('.storage ul li'); // Items in user's storage
@@ -50,7 +52,8 @@ const download = { // Functions connected with downloading
 		return items;
 	},
 
-	unselect_items: function() { // Function that makes all the selected items unselected
+	// Function that makes all the selected items unselected
+	unselect_items: function() { 
 
 		let files_list_items = $('.storage ul li'); // Items in the user's storage
 
@@ -64,7 +67,8 @@ const download = { // Functions connected with downloading
 		this.uncheck_checkboxes(); // Unchecking all the checked checkboxes
 	},
 
-	uncheck_checkboxes: function() { // Function that makes all the checked checkboxes unchecked
+	// Function that makes all the checked checkboxes unchecked
+	uncheck_checkboxes: function() { 
 
 		let files_list_checkboxes = $('.storage ul li input'); // Checkboxes in the user's storage
 
@@ -76,6 +80,7 @@ const download = { // Functions connected with downloading
 		}
 	},
 
+	// Function that changes status of a checkbox (checked / unchecked)
 	change_checkbox_status: function(checkbox) {
 
 		if(checkbox.checked) { // User selected an item
@@ -87,7 +92,8 @@ const download = { // Functions connected with downloading
 		}
 	},
 
-	update_button_status: function(download_button) { // Update download button (change it's active status)
+	// Function that updates download button (change it's active status)
+	update_button_status: function(download_button) { 
 
 		let is_selected = this.check_selected_items();
 
@@ -102,12 +108,23 @@ const download = { // Functions connected with downloading
 				download_button.addClass('unactive');	
 			}	
 		}
-	}
+	},
+
+	// Function that starts creating archive animation
+	archive_creating_animation_start: function() {
+		$('.path .animation').eq(0).css('display', 'inline-block');
+	},
+
+	// Function that stops creating archive animation
+	archive_creating_animation_stop: function() {
+		$('.path .animation').eq(0).css('display', 'none');
+	},
 };
 
 const directory = { // Functions to work with directory
 
-	change_directory: function(new_directory, current_path, path_paragraph, files_list) { // Function that changes user's current directory
+	// Function that changes user's current directory
+	change_directory: function(new_directory, current_path, path_paragraph, files_list) { 
 
 		if (new_directory !== '..') { // If user is moving to the subfolder
 
@@ -118,14 +135,17 @@ const directory = { // Functions to work with directory
 			current_path.splice(-1, 1); // Deleting last element of current path array (moving to the parental folder)
 		}
 
-		let current_path_string = processing.parse_path_into_string(current_path); // Parse current path array into string format
+		// Parse current path array into string format
+		let current_path_string = processing.parse_path_into_string(current_path); 
 
-		this.update_info(current_path_string, path_paragraph, files_list); // Update current path on the page and clear storage files list
+		// Update current path on the page and clear storage files list
+		this.update_info(current_path_string, path_paragraph, files_list); 
 
 		return current_path_string;
 	},
 
-	update_info: function(new_path, path_paragraph, files_list) { // Function that updates current path on the page and clear storage files list
+	// Function that updates current path on the page and clear storage files list
+	update_info: function(new_path, path_paragraph, files_list) { 
 
 		path_paragraph.text(`path: ${new_path}`); // Changing user's current path shown at the page
 
@@ -135,7 +155,8 @@ const directory = { // Functions to work with directory
 
 const processing = { // Functions for processing some data
 
-	parse_path_into_string: function(path) { // Function that parses path array into string format
+	// Function that parses path array into string format
+	parse_path_into_string: function(path) { 
 	
 		let path_string = '';
 
@@ -146,6 +167,7 @@ const processing = { // Functions for processing some data
 		return path_string;
 	},
 
+	// Function that prevent click event for parental elements
 	prevent_click_for_parental_element: function(event) {
 
 		if (!event) { // Prevent click event for parental li element (storage item)
