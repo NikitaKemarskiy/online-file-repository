@@ -2,6 +2,9 @@
 const express = require('express');
 const path = require('path');
 
+// Constants
+const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
+
 // Initialization
 const router = express.Router();
 
@@ -144,6 +147,16 @@ const router_init = function(io, config) {
 		req.session.authorized = undefined;
 
 		res.redirect('/sign_in');
+	});
+	
+	router.get('/download_archive/:archive_name', function(req, res) { // Download archive handler
+
+		let archive_name = req.params.archive_name; // Archive name
+		let archive_path = path.join(ARCHIVES_PATH, archive_name); // Arhive path
+		console.log(`Request for downloading: ${archive_path}`); // Test log
+
+		res.header('Content-type', 'application/zip'); // Setting the header that send file is an archive 
+		res.download(archive_path, archive_name); // Sending an archive to the client
 	});
 
 	return router;

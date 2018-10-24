@@ -40,15 +40,15 @@ const socket = function(io, storage) {
 			console.dir(data);
 
 			// Variables
+			let archive_name = archiver.generate_zip_name(data.email);
 			let items_path = path.join(STORAGE_PATH, data.email, data.path);
-			let archive_path = path.join(ARCHIVES_PATH, 'out.zip'); 
-
+			let archive_path = path.join(ARCHIVES_PATH, archive_name); 
+			
 			archiver.write_zip(items_path, data.items, archive_path).then(function(result) { // Creating a zip archive
-				
 				// Log to see the path of created archive
-				console.log(result);
+				console.log(`Archive was created: ${result}`);
 
-				io.sockets.connected[socket.id].emit('zip_created', { result });
+				io.sockets.connected[socket.id].emit('zip_created', { archive_name: archive_name });
 			});
 		});
 	}

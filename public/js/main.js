@@ -34,7 +34,7 @@ $(document).ready(function() {
 		if (!$(this).hasClass('unactive')) { // If any items are selected
 			
 			let items = download.get_selected_items(current_path, user_email); // Getting an object with the current path and the array with selected items   
-			
+
 			download.unselect_items(); // Unselect all the selected items
 			download.update_button_status(download_button); // Updating button status (active / unactive)
 			download.archive_creating_animation_start(); // Starting the animation of loader spinner
@@ -59,9 +59,11 @@ $(document).ready(function() {
 		download.update_button_status(download_button);
 	});
 
-	socket.on('zip_created', function(data) {
+	socket.on('zip_created', function(data) { // Archive was created event handler
 
-		alert(`Archive was created: ${data.result}`);
+		let url = `/download_archive/${data.archive_name}`; // Url for popup request
+		window.open(url, '_blank'); // Open download url in a new tab
+
 		download.archive_creating_animation_stop(); // Stoping the animation of loader spinner
 	});
 });
