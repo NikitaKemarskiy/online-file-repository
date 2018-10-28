@@ -25,6 +25,7 @@ const download = { // Functions connected with downloading
 		let files_list_items = $('.storage ul li'); // Items in user's storage
 		let items_array = [];
 		let item_type = '';
+		let archive_name = user_email + '.' + Math.round(Math.random() * 1000000000);
 
 		for (let i = 0; i < files_list_items.length; i++) {
 
@@ -46,6 +47,7 @@ const download = { // Functions connected with downloading
 		let items = {
 			email: user_email,
 			path: download_path,
+			archive_name,
 			items: items_array
 		};
 
@@ -108,17 +110,7 @@ const download = { // Functions connected with downloading
 				download_button.addClass('unactive');	
 			}	
 		}
-	},
-
-	// Function that starts creating archive animation
-	archive_creating_animation_start: function() {
-		$('.path .animation').eq(0).css('display', 'inline-block');
-	},
-
-	// Function that stops creating archive animation
-	archive_creating_animation_stop: function() {
-		$('.path .animation').eq(0).css('display', 'none');
-	},
+	}
 };
 
 const directory = { // Functions to work with directory

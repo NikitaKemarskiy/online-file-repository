@@ -9,6 +9,7 @@ $(document).ready(function() {
 	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
 	const download_button = $('.path .button'); // Button for downloading files
 	const path_paragraph = $('.path p').eq(0); // Paragraph which contains path
+	const download_form = $('form.download').eq(0);
 
 	// Click events
 	files_list.on('click', 'li', function() { // Click at the storage item
@@ -34,12 +35,16 @@ $(document).ready(function() {
 		if (!$(this).hasClass('unactive')) { // If any items are selected
 			
 			let items = download.get_selected_items(current_path, user_email); // Getting an object with the current path and the array with selected items   
+			items.items = JSON.stringify(items.items); // Converting items array into JSON string to pass it using POST method
 
 			download.unselect_items(); // Unselect all the selected items
 			download.update_button_status(download_button); // Updating button status (active / unactive)
-			download.archive_creating_animation_start(); // Starting the animation of loader spinner
 
-			socket.emit('zip_files', items); // Sending items array to make an archive with them
+			download_form.children('input.email').eq(0).val(items.email); // Filling the download form with data for download
+			download_form.children('input.path').eq(0).val(items.path);
+			download_form.children('input.items').eq(0).val(items.items);
+			download_form.children('input.archive_name').eq(0).val(items.archive_name);
+			download_form.submit(); // Submiting this form with a POST method
 		}
 	});
 
@@ -57,13 +62,5 @@ $(document).ready(function() {
 		}
 
 		download.update_button_status(download_button);
-	});
-
-	socket.on('zip_created', function(data) { // Archive was created event handler
-
-		let url = `/download_archive/${data.archive_name}`; // Url for popup request
-		window.open(url, '_blank'); // Open download url in a new tab
-
-		download.archive_creating_animation_stop(); // Stoping the animation of loader spinner
 	});
 });

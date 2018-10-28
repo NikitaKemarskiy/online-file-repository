@@ -4,6 +4,7 @@ const path = require('path');
 
 // Constants
 const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
+const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
 // Initialization
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 const authorization = require('../functions/authorization.js'); // Authorization functions
 const storage = require('../functions/storage.js'); // Work with storage functions
 const socket_constructor = require('../functions/socket.js'); // Socket.io functions constructor
+const archiver_constructor = require('../archiver/archiver.js'); // Archiver functions constructor
 
 // Routing initialization function
 const router_init = function(io, config) {
@@ -20,8 +22,9 @@ const router_init = function(io, config) {
 	const database = require('../database/database.js');
 	database.connect(config.database.host, config.database.port, config.database.name);
 
-	// Socket.io functions
-	const socket = new socket_constructor(io, storage);
+	// Functions
+	const socket = new socket_constructor(io, storage); // Socket.io functions
+	const archiver = new archiver_constructor(storage); // Archiver function
 
 	// Socket.io
 	io.on('connection', socket.connection);
@@ -45,8 +48,6 @@ const router_init = function(io, config) {
 				let storage_size = 100;
 
 				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
-					
-					console.dir({ items }); // test log
 
 					res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
 						user_email: req.session.email, 
@@ -149,14 +150,24 @@ const router_init = function(io, config) {
 		res.redirect('/sign_in');
 	});
 	
-	router.get('/download_archive/:archive_name', function(req, res) { // Download archive handler
+	router.post('/archive/download', function(req, res) { // Create archive post request handler
 
-		let archive_name = req.params.archive_name; // Archive name
-		let archive_path = path.join(ARCHIVES_PATH, archive_name); // Arhive path
-		console.log(`Request for downloading: ${archive_path}`); // Test log
+		// Parsing JSON string with items into array
+		req.body.items = JSON.parse(req.body.items); 
 
-		res.header('Content-type', 'application/zip'); // Setting the header that send file is an archive 
-		res.download(archive_path, archive_name); // Sending an archive to the client
+		// Variables
+		let archive_name = archiver.generate_zip_name(req.body.email);
+		let items_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
+		let archive_path = path.join(ARCHIVES_PATH, archive_name); 
+		
+		archiver.write_zip(items_path, req.body.items, archive_path).then(function(result) { // Creating a zip archive
+			
+			// Setting the header that send file is an archive 
+			res.header('Content-type', 'application/zip');
+			
+			// Sending an archive to the client	 
+			res.download(archive_path, archive_name); 
+		});
 	});
 
 	return router;
