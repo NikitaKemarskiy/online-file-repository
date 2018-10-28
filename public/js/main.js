@@ -51,7 +51,7 @@ $(document).ready(function() {
 			download_form.children('input.path').eq(0).val(items.path);
 			download_form.children('input.items').eq(0).val(items.items);
 			download_form.children('input.archive_name').eq(0).val(items.archive_name);
-			download_form.submit(); // Submiting this form with a POST method
+			download_form.submit(); // Submiting this form using the POST method
 		}
 	});
 

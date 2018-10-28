@@ -58,18 +58,28 @@ const archiver = function(storage) {
 					fs.readdir(directory_path, function(error, directory_items) { // Reading this folder
 						if (error) {
 							console.error(`Error: ${error.message}`);
-						} else {	
-							// Calling count items to zip functions inside the current folder
-							items_counting.count_items_to_zip(directory_path, directory_items).then(function(result) { 
+						} else {
 
-								items_in_directories += result; // Incrementing a number of items inside the folder to zip
-								async_calls_counter++; // Incrementing an amount of async calls
+							if (directory_items.length === 0) { // Directory is empty
+								async_calls_counter++;
 								
 								// If it's the last needed call -> resolve with a number of items inside the folder
 								if (async_calls_counter >= directories.length) { 
 									resolve(items_in_directories);
 								}
-							});
+							} else {
+								// Calling count items to zip functions inside the current folder
+								items_counting.count_items_to_zip(directory_path, directory_items).then(function(result) { 
+
+									items_in_directories += result; // Incrementing a number of items inside the folder to zip
+									async_calls_counter++; // Incrementing an amount of async calls
+									
+									// If it's the last needed call -> resolve with a number of items inside the folder
+									if (async_calls_counter >= directories.length) { 
+										resolve(items_in_directories);
+									}
+								});
+							}
 						}
 					}); 
 				}
@@ -101,10 +111,14 @@ const archiver = function(storage) {
 
 				if (items_parsed === undefined) { // If items aren't passed -> add all the items inside the directory to zip archive
 
-					fs.readdir(directory_path, function(error, directory_items) { // Reading the folder
-						
+					fs.readdir(directory_path, function(error, directory_items) { // Reading the folder	
 						if (error) {
 							console.error(`Error: ${error.message}`);
+						} else if (directory_items.length === 0) {
+							resolve({
+								directory,
+								async_calls_counter
+							});
 						} else {
 
 							// Calling count items to zip function to get a number of async calls
@@ -213,12 +227,12 @@ const archiver = function(storage) {
 	// Export function that initializes and creates a zip archive
 	this.write_zip = function(items_path, items_parsed, archive_path) { 
 
-		let async_calls_counter = 0; // Variable that contains a number of async calls into the loop
 		let zip = new jszip();
 
 		return new Promise(function(resolve, reject) {
 
-			zip_processing.add_directory_to_zip(zip, items_path, items_parsed).then(function(result) { // Calling add directory to zip function for the items folder
+			// Calling add directory to zip function for the folder with items
+			zip_processing.add_directory_to_zip(zip, items_path, items_parsed).then(function(result) { 
 				zip = result.directory;
 				zip_processing.generate_zip(zip, archive_path).then(function(result) {
 					resolve(result);

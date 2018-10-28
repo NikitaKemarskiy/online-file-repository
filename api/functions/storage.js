@@ -28,6 +28,8 @@ const sort_items = function(items_array) { // Functions that sorts the items in 
 
 const parse_items = function(items_path, items) { // Function that parses files in a directory into an array with objects
 
+	items.sort(); // Sorting items in alphabetical order
+
 	return new Promise(function(resolve, reject) {
 
 		const items_array_filled = function() { // Promise function for filling the items array 
