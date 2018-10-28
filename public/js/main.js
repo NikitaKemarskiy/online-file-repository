@@ -7,9 +7,11 @@ $(document).ready(function() {
 
 	// jQuery elements
 	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
-	const download_button = $('.path .button'); // Button for downloading files
+	const download_button = $('.path .button.download'); // Button for downloading files
+	const delete_button = $('.path .button.delete'); // Button for deleting files
 	const path_paragraph = $('.path p').eq(0); // Paragraph which contains path
-	const download_form = $('form.download').eq(0);
+	const download_form = $('form.download').eq(0); // Form for downloading files
+	const delete_form = $('form.delete').eq(0); // Form for deleting files
 
 	// Click events
 	files_list.on('click', 'li', function() { // Click at the storage item
@@ -25,26 +27,51 @@ $(document).ready(function() {
 	files_list.on('click', 'input', function(event) { // Click at the checkbox button
 
 		download.change_checkbox_status(this); // If checkbox is checked -> add 'selected' class to an item or remove it if checkbox isn't checked
-		download.update_button_status(download_button); // Updating button status (active / unactive) depending on checkboxes
+		download.update_button_status(download_button); // Updating download button status (active / unactive) depending on checkboxes
+		download.update_button_status(delete_button); // Updating delete button status (active / unactive) depending on checkboxes
 
 		processing.prevent_click_for_parental_element(event); // Preventing click event for parental element
 	});
 
-	download_button.on('click', function(event) { // Click at the downloading button
+	download_button.on('click', function(event) { // Click at the download button
 
 		if (!$(this).hasClass('unactive')) { // If any items are selected
 			
-			let items = download.get_selected_items(current_path, user_email); // Getting an object with the current path and the array with selected items   
+			// Getting an object with the current path and the array with selected items
+			let items = download.get_selected_items(current_path, user_email); 
+			
 			items.items = JSON.stringify(items.items); // Converting items array into JSON string to pass it using POST method
+			items.archive_name = user_email + '.' + Math.round(Math.random() * 1000000000); // Generating the archive unique name
 
 			download.unselect_items(); // Unselect all the selected items
-			download.update_button_status(download_button); // Updating button status (active / unactive)
+			download.update_button_status(download_button); // Updating downlad button status (active / unactive)
+			download.update_button_status(delete_button); // Updating delete button status (active / unactive)
 
 			download_form.children('input.email').eq(0).val(items.email); // Filling the download form with data for download
 			download_form.children('input.path').eq(0).val(items.path);
 			download_form.children('input.items').eq(0).val(items.items);
 			download_form.children('input.archive_name').eq(0).val(items.archive_name);
 			download_form.submit(); // Submiting this form with a POST method
+		}
+	});
+
+	delete_button.on('click', function(event) { // Click at the delete button
+
+		if (!$(this).hasClass('unactive')) { // If any items are selected
+			
+			// Getting an object with the current path and the array with selected items
+			let items = download.get_selected_items(current_path, user_email); 
+			
+			items.items = JSON.stringify(items.items); // Converting items array into JSON string to pass it using POST method
+
+			download.unselect_items(); // Unselect all the selected items
+			download.update_button_status(download_button); // Updating download button status (active / unactive)
+			download.update_button_status(delete_button); // Updating delete button status (active / unactive)
+
+			delete_form.children('input.email').eq(0).val(items.email); // Filling the download form with data for download
+			delete_form.children('input.path').eq(0).val(items.path);
+			delete_form.children('input.items').eq(0).val(items.items);
+			delete_form.submit(); // Submiting this form with a POST method
 		}
 	});
 
@@ -61,6 +88,8 @@ $(document).ready(function() {
 			files_list.append(`<li class="${data.items[i].type}"><label><input type="checkbox"><div class="storage-element">${data.items[i].name}</div></label></li>`);
 		}
 
-		download.update_button_status(download_button);
+		download.update_button_status(download_button); // Updating download button status (active / unactive)
+		download.update_button_status(delete_button); // Updating delete button status (active / unactive)
+
 	});
 });

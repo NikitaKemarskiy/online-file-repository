@@ -25,7 +25,6 @@ const download = { // Functions connected with downloading
 		let files_list_items = $('.storage ul li'); // Items in user's storage
 		let items_array = [];
 		let item_type = '';
-		let archive_name = user_email + '.' + Math.round(Math.random() * 1000000000);
 
 		for (let i = 0; i < files_list_items.length; i++) {
 
@@ -47,7 +46,6 @@ const download = { // Functions connected with downloading
 		let items = {
 			email: user_email,
 			path: download_path,
-			archive_name,
 			items: items_array
 		};
 
@@ -95,19 +93,19 @@ const download = { // Functions connected with downloading
 	},
 
 	// Function that updates download button (change it's active status)
-	update_button_status: function(download_button) { 
+	update_button_status: function(button) { 
 
 		let is_selected = this.check_selected_items();
 
 		if (is_selected) { // If any item is selected -> make download button active
 			
-			if (download_button.hasClass('unactive')) {
-				download_button.removeClass('unactive');
+			if (button.hasClass('unactive')) {
+				button.removeClass('unactive');
 			}
 		} else { // If none of items is selected -> make button unactive
 
-			if (!download_button.hasClass('unactive')) {
-				download_button.addClass('unactive');	
+			if (!button.hasClass('unactive')) {
+				button.addClass('unactive');	
 			}	
 		}
 	}

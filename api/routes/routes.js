@@ -125,8 +125,6 @@ const router_init = function(io, config) {
 			if (check_sign_up_result.success) { // Sign up data is valid -> success
 
 				database.add_item(req.body.login, req.body.password, req.body.email).then(function() { // Save new user in the database
-					
-					console.log('Item was successfully saved!');
 
 					req.session.authorized = true;
 					req.session.email = req.body.email;
@@ -151,23 +149,23 @@ const router_init = function(io, config) {
 		res.redirect('/sign_in');
 	});
 	
-	router.post('/archive/download', function(req, res) { // Create archive post request handler
+	router.post('/files/download', function(req, res) { // Download files post request handler
 
 		// Parsing JSON string with items into array
 		req.body.items = JSON.parse(req.body.items); 
 
 		// Variables
-		let archive_name = archiver.generate_zip_name(req.body.email);
 		let items_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
-		let archive_path = path.join(ARCHIVES_PATH, archive_name); 
+		let archive_path = path.join(ARCHIVES_PATH, req.body.archive_name); 
 		
-		archiver.write_zip(items_path, req.body.items, archive_path).then(function(result) { // Creating a zip archive
+		// Creating a zip archive
+		archiver.write_zip(items_path, req.body.items, archive_path).then(function(result) { 
 			
 			// Setting the header that send file is an archive 
 			res.header('Content-type', 'application/zip');
 			
 			// Sending an archive to the client	 
-			res.download(archive_path, archive_name);
+			res.download(archive_path, req.body.archive_name);
 
 			// Event after sending the archive
 			res.on('finish', function() {
@@ -181,6 +179,17 @@ const router_init = function(io, config) {
 				});
 			}); 
 		});
+	});
+
+	router.post('/files/delete', function(req, res) { // Remove files post request handler
+
+		// Parsing JSON string with items into array
+		req.body.items = JSON.parse(req.body.items);
+
+		// Variables
+		let items_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
+	
+		console.dir(req.body);
 	});
 
 	return router;

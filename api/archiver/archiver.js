@@ -226,12 +226,6 @@ const archiver = function(storage) {
 			});
 		});
 	}
-
-	this.generate_zip_name = function(email) {
-
-		let archive_name = email + '.' + Math.round(Math.random() * 1000000000);
-		return archive_name;
-	}
 }
 
 // Exports

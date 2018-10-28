@@ -44,11 +44,14 @@
 		<div class="path">
 			<p>path: /</p>
 			
-			<span class="button unactive">
+			<span class="button download unactive">
 				Download files
 			</span>
+		
+			<span class="button delete unactive">
+				Delete files
+			</span>
 
-			<div class="animation"></div>
 		</div>
 
 		<div class="storage">
@@ -69,11 +72,17 @@
 
 	</div>
 
-	<form action="/archive/download" method="post" target="_blank" id="download" class="download">
+	<form action="/files/download" method="post" target="_blank" id="download" class="download">
 		<input type="text" name="email" class="email">
 		<input type="text" name="path" class="path">
 		<input type="text" name="items" class="items">
 		<input type="text" name="archive_name" class="archive_name">
+	</form>
+
+	<form action="/files/delete" method="post" target="_blank" id="delete" class="delete">
+		<input type="text" name="email" class="email">
+		<input type="text" name="path" class="path">
+		<input type="text" name="items" class="items">
 	</form>
 
 </body>
