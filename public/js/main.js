@@ -68,10 +68,7 @@ $(document).ready(function() {
 			download.update_button_status(download_button); // Updating download button status (active / unactive)
 			download.update_button_status(delete_button); // Updating delete button status (active / unactive)
 
-			delete_form.children('input.email').eq(0).val(items.email); // Filling the download form with data for download
-			delete_form.children('input.path').eq(0).val(items.path);
-			delete_form.children('input.items').eq(0).val(items.items);
-			delete_form.submit(); // Submiting this form with a POST method
+			socket.emit('delete_items', items);
 		}
 	});
 
@@ -91,5 +88,10 @@ $(document).ready(function() {
 		download.update_button_status(download_button); // Updating download button status (active / unactive)
 		download.update_button_status(delete_button); // Updating delete button status (active / unactive)
 
+	});
+
+	socket.on('items_deleted', function(data) { // Items successfully deleted event handler
+
+		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) }); // Go to this folder
 	});
 });

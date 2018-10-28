@@ -181,17 +181,6 @@ const router_init = function(io, config) {
 		});
 	});
 
-	router.post('/files/delete', function(req, res) { // Remove files post request handler
-
-		// Parsing JSON string with items into array
-		req.body.items = JSON.parse(req.body.items);
-
-		// Variables
-		let items_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
-	
-		console.dir(req.body);
-	});
-
 	return router;
 }
 

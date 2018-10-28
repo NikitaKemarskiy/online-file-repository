@@ -1,6 +1,7 @@
 // Modules
 const path = require('path');
 const fs = require('fs');
+const exec = require('child_process').exec;
 
 // Variables
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
@@ -76,6 +77,43 @@ const parse_items = function(items_path, items) { // Function that parses files 
 	});
 }
 
+const delete_items = function(items_path, items) { // Function that deletes files / directories on the specified path 
+
+	let async_calls_counter = 0;
+
+	return new Promise(function(resolve, reject) {
+
+		for (let i = 0; i < items.length; i++) {
+
+			let item_path = path.join(items_path, items[i].name);
+
+			if (items[i].type === 'folder') { // Item is a directory
+				exec('rm -r ' + item_path, function (error) {
+		  			if (error) {
+		  				console.error(`Error: ${error.message}`);
+		  			}
+		  			async_calls_counter++;
+
+		  			if (async_calls_counter === items.length) {
+		  				resolve(true);
+		  			}
+				});
+			} else { // Item is a file
+				fs.unlink(item_path, function(error) {
+					if (error) {
+		  				console.error(`Error: ${error.message}`);
+		  			}
+					async_calls_counter++;
+
+					if (async_calls_counter === items.length) {
+						resolve(true);
+					}
+				});
+			}
+		}
+	});
+}
+
 const check_if_directory_exists = function(path) { // Function that checks if directory exists
 
 	return new Promise(function(resolve, reject) {
@@ -145,6 +183,7 @@ const show_directory = function(directory_path) { // Function that shows directo
 // Exports
 module.exports = {
 	parse_items,
+	delete_items,
 	show_storage,
 	show_directory
 };

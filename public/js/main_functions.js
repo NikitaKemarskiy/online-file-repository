@@ -134,6 +134,16 @@ const directory = { // Functions to work with directory
 		return current_path_string;
 	},
 
+	update_directory: function(current_path, files_list) {
+
+		// Parse current path array into string format
+		let current_path_string = processing.parse_path_into_string(current_path);
+
+		files_list.text(''); // Clearing user's storage at the page
+
+		return current_path_string;
+	},
+
 	// Function that updates current path on the page and clear storage files list
 	update_info: function(new_path, path_paragraph, files_list) { 
 
