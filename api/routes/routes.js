@@ -1,6 +1,7 @@
 // Modules
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 
 // Constants
 const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
@@ -166,7 +167,19 @@ const router_init = function(io, config) {
 			res.header('Content-type', 'application/zip');
 			
 			// Sending an archive to the client	 
-			res.download(archive_path, archive_name); 
+			res.download(archive_path, archive_name);
+
+			// Event after sending the archive
+			res.on('finish', function() {
+				// Deleting this archive
+				fs.unlink(archive_path, function(error) {
+					if (error) {
+						console.error(`Error: ${error.message}`);
+					} else {
+						console.log(`Archive was sent and deleted: ${archive_path}`);
+					}
+				});
+			}); 
 		});
 	});
 
