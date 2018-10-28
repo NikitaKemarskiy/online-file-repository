@@ -3,7 +3,7 @@ const is_email = require('isemail');
 
 // Functions
 const check_sign_in = function(email, password, database) { // Function that checks if sign in info valid
-	
+
 	return new Promise(function(resolve, reject) {
 
 		database.check_item(email, password).then(function(result) { // Checking is user in the database
@@ -21,7 +21,8 @@ const check_sign_up = function(email, login, password, confirm_password, databas
 
 	return new Promise(function(resolve, reject) {
 
-		if (typeof(email) !== 'string' || typeof(login) !== 'string' || typeof(password) !== 'string') { // Email or login or password isn't string -> error
+		// Email or login or password isn't string -> error
+		if (typeof(email) !== 'string' || typeof(login) !== 'string' || typeof(password) !== 'string') { 
 			resolve({ success: false, error_message: 'invalid data' });
 			return void 0;
 		}
