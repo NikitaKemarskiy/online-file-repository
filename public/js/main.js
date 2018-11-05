@@ -68,6 +68,7 @@ $(document).ready(function() {
 			download.update_button_status(download_button); // Updating download button status (active / unactive)
 			download.update_button_status(delete_button); // Updating delete button status (active / unactive)
 
+
 			socket.emit('delete_items', items);
 		}
 	});
@@ -87,7 +88,6 @@ $(document).ready(function() {
 
 		download.update_button_status(download_button); // Updating download button status (active / unactive)
 		download.update_button_status(delete_button); // Updating delete button status (active / unactive)
-
 	});
 
 	socket.on('items_deleted', function(data) { // Items successfully deleted event handler

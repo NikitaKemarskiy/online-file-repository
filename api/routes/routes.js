@@ -1,7 +1,6 @@
 // Modules
 const express = require('express');
 const path = require('path');
-const hash = require('object-hash');
 const fs = require('fs');
 
 // Constants
@@ -95,8 +94,6 @@ const router_init = function(io, config) {
 
 	router.post('/sign_in_handler', function(req, res) { // Sign in post handler
 
-		req.body.password = hash(req.body.password); // Hashing the password
-		
 		authorization.check_sign_in(req.body.email, req.body.password, database).then(function(result) { // Checking sign in data
 
 			if (result) { // User is in a database -> success
@@ -127,9 +124,7 @@ const router_init = function(io, config) {
 
 			if (check_sign_up_result.success) { // Sign up data is valid -> success
 
-				req.body.password = hash(req.body.password); // Hashing the password
-
-				database.add_item(req.body.login, req.body.password, req.body.email).then(function() { // Save new user in the database
+				database.add_item(req.body.login, check_sign_up_result.hash, req.body.email).then(function() { // Save new user in the database
 
 					req.session.authorized = true;
 					req.session.email = req.body.email;

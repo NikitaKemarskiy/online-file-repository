@@ -61,32 +61,26 @@ let find_item = function(email) { // Find the item in the database
 			if (error) {
 				console.error(`Database search error: ${error.message}`);
 			} else {
-				items_length = items.length;
+				resolve(items.length);
 			}
-		}).then(function() {
-
-			resolve(items_length);
 		});
 	});
 }
 
-let check_item = function(email, password) { // Check if the item with specific email and password exists
+let check_item = function(email) { // Check if the item with specific email and password exists
 
 	return new Promise(function(resolve, reject) {
 
-		user.find({ email: email, password: password }, function(error, items) {
+		user.find({ email: email }, function(error, items) {
 
 			if (error) {
 				console.error(`Database search error: ${error.message}`);
 			} else {
-				items_length = items.length;
-			}
-		}).then(function() {
-
-			if (items_length > 0) {
-				resolve(true);
-			} else {
-				resolve(false);
+				if (items.length > 0) {
+					resolve({ exists: true, password: items[0].password });
+				} else {
+					resolve({ exists: false });
+				}
 			}
 		});
 	});
