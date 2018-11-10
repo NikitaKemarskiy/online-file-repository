@@ -1,8 +1,14 @@
 html, body {
 	margin: 0;
-	background-color: #c1bdba;
+	color: #fff;
+	background-color: #2f313d;
 	padding: 0;
 	width: 100%;
+}
+
+a {
+	color: #1ab188;
+	text-decoration: none;
 }
 
 div.block {
@@ -18,7 +24,7 @@ div.form {
 	min-width: 600px;
 	margin: 0 auto;
 	margin-top: 200px;
-	background-color: #1f383c;
+	background-color: #1a1b21;
 	border-radius: 4px;
 	min-height: 300px;
 }
@@ -48,7 +54,7 @@ div.form_header {
 }
 
 form.sign_form {
-	background-color: #1f383c;
+	background-color: #1a1b21;
 	border-radius: 4px;
 	padding-top: 10px;
 	padding-bottom: 10px;

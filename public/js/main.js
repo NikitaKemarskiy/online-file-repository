@@ -95,11 +95,10 @@ $(document).ready(function() {
 			dragenter_counter--; // Decrementing drag counter
 			// If dragleave occured to storage window -> make "drag and drop" window invisible
 			if (dragenter_counter <= 0) { 
-				upload_block.addClass('unvisible');
+			  	upload_block.addClass('unvisible');
 			}
 		})
 		.on('drop', function(event) {
-			
 			upload_block.addClass('unvisible');
 			dragenter_counter = 0; 
 			loader_spinner.css('display', 'block'); // Enable animation spinner

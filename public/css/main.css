@@ -1,6 +1,6 @@
 html, body {
 	margin: 0;
-	background-color: #c1bdba;
+	background-color: #2f313d;
 	font-family: Verdana, Arial;
 	color: #fff;
 	padding: 0;
@@ -84,10 +84,14 @@ div.path span.button.delete.unactive {
 	background-color: #d9000066;
 }
 
+div.path span.button.folder {
+	background-color: #e8b55c;
+}
+
 div.storage {
 	color: #696969;
 	padding: 0;
-	border: 2px solid #696969;
+	border: 1px solid #1a1b21;
 	width: 98%;
 	height: 90%;
 	margin: 0 auto;
@@ -104,7 +108,7 @@ div.storage:drag-over {
 div.footer {
 	text-align: center;
 	width: 100%;
-	color: #696969;
+	color: #fff;
 }
 
 div.footer p {
@@ -118,7 +122,7 @@ div.header {
 	padding-right: 2%;
 	box-sizing: border-box;
 	width: 100%;
-	background-color: #1f383c;
+	background-color: #1a1b21;
 }
 
 div.header div.header-text {
@@ -230,12 +234,12 @@ div.storage ul li {
 	padding-left: 5px;
 	box-sizing: border-box;
 	border: none;
-	border-bottom: 1px solid #a5a4a4;
+	border-bottom: 0.5px solid #a5a4a4;
 }
 
 div.storage ul li:hover {
 	color: #fff;
-	background-color: #1f383c;
+	background-color: #5c6078;
 }
 
 div.storage ul li label {
