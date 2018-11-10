@@ -169,6 +169,9 @@ const router_init = function(io, config) {
 
 		// Parsing JSON string with items into array
 		req.body.items = JSON.parse(req.body.items); 
+		
+		// Adding .zip extension to the archive name
+		req.body.archive_name += '.zip';
 
 		// Variables
 		let items_path = path.join(STORAGE_PATH, req.body.email, req.body.path);

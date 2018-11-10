@@ -48,7 +48,7 @@ $(document).ready(function() {
 			let items = download.get_selected_items(current_path, user_email); 
 			
 			items.items = JSON.stringify(items.items); // Converting items array into JSON string to pass it using POST method
-			items.archive_name = user_email + '.' + Math.round(Math.random() * 1000000000); // Generating the archive unique name
+			items.archive_name = (Math.round(Math.random() * 1000000000000)).toString(); // Generating the archive unique name
 
 			download.unselect_items(); // Unselect all the selected items
 			download.update_button_status(download_button); // Updating downlad button status (active / unactive)
