@@ -121,11 +121,24 @@ const check_if_directory_exists = function(path) { // Function that checks if di
 	return new Promise(function(resolve, reject) {
 		
 		fs.stat(path, function(error, stats) {
-
 			if (error) {
 				resolve(false); // Directory doesn't exist
 			} else {
 				resolve(true); // Directory exists
+			}
+		});
+	});
+}
+
+const create_directory = function(path) {
+
+	return new Promise(function(resolve, reject) {
+
+		fs.mkdir(path, function(error) {
+			if (error) {
+				reject(error.message);
+			} else {
+				resolve();
 			}
 		});
 	});
@@ -185,6 +198,7 @@ const show_directory = function(directory_path) { // Function that shows directo
 // Exports
 module.exports = {
 	parse_items,
+	create_directory,
 	delete_items,
 	show_storage,
 	show_directory

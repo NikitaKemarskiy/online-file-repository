@@ -190,5 +190,36 @@ const processing = { // Functions for processing some data
 		}
     	event.cancelBubble = true;
     	if (event.stopPropagation) event.stopPropagation();
+	},
+
+	check_forbidden_symbols: function(folder_name) {
+		if (folder_name.indexOf('\\') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\/') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\:') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\*') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\?') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\"') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\<') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\>') >= 0) {
+			return true;
+		}
+		if (folder_name.indexOf('\|') >= 0) {
+			return true;
+		}
+		return false;
 	}
 };

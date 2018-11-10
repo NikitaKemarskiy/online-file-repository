@@ -6,12 +6,18 @@ $(document).ready(function() {
 	const current_path = ['/']; // Current storage path
 
 	// jQuery elements
-	const upload_block = $('.upload-block').eq(0);
+	const upload_block = $('div.upload-block').eq(0);
+	const create_folder_block = $('div.create-folder-block').eq(0);
+	const create_folder_input = $('div.create-folder-block input').eq(0);
+	const create_folder_error_message = $('div.create-folder-block p.error-message').eq(0);
+	const create_folder_button_cancel = $('div.create-folder-button.cancel').eq(0);
+	const create_folder_button_create = $('div.create-folder-button.create').eq(0);
 	const storage = $('div.storage').eq(0);
 	const loader_spinner = $('div.path div.animation').eq(0);
 	const files_list = $('div.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
 	const download_button = $('div.path span.button.download').eq(0); // Button for downloading files
 	const delete_button = $('div.path span.button.delete').eq(0); // Button for deleting files
+	const folder_button = $('div.path span.button.folder').eq(0); // Button for creating the new folder
 	const path_paragraph = $('div.path p').eq(0); // Paragraph which contains path
 	const download_form = $('form.download').eq(0); // Form for downloading files
 	const delete_form = $('form.delete').eq(0); // Form for deleting files
@@ -80,6 +86,41 @@ $(document).ready(function() {
 		}
 	});
 
+	folder_button.on('click', function(event) { // Click at the create folder button
+		create_folder_block.removeClass('unvisible');
+	});
+
+	create_folder_button_cancel.on('click', function(event) { // Click at the cancel creating folder button
+		if (!create_folder_block.hasClass('unvisible')) {
+			create_folder_input.val(''); // Clearing input for the new folder name
+			create_folder_block.addClass('unvisible'); // Making create folder window invisible
+			create_folder_input.removeClass('error'); // Making input for the new folder name clear (without error styles)
+			create_folder_error_message.addClass('unvisible'); // Making error message paragraph invisible
+		}
+	});
+
+	create_folder_button_create.on('click', function(event) { // Click at the create folder with specified name button
+		if (!create_folder_block.hasClass('unvisible')) {
+
+			let folder_name = create_folder_input.val(); // Getting the new folder name
+			let create_folder_path = processing.parse_path_into_string(current_path);
+			
+			// Folder name is longer than 64 or forbidden symbols are in it
+			if (processing.check_forbidden_symbols(folder_name) || folder_name.length > 64 || folder_name.length < 1) {  
+				create_folder_input.addClass('error'); // Applying error styles for the input
+				create_folder_error_message.removeClass('unvisible'); // Making error message paragraph visible
+			} else { // Forbidden symbols weren't found -> new folder name is ok
+				create_folder_input.removeClass('error'); // Making input for the new folder name clear (without error styles)
+				create_folder_error_message.addClass('unvisible'); // Making error message paragraph invisible
+				create_folder_input.val(''); // Clearing the input for the new folder name
+				create_folder_block.addClass('unvisible'); // Making create folder window invisible
+
+				// Emitting socket event for creating the new folder
+				socket.emit('create_folder', { email: user_email, path: create_folder_path, folder_name: folder_name });
+			}
+		}
+	});
+
 	// Drag events for uploading files
 	storage.on('drag dragstart dragend dragover dragenter dragleave drop', function(event) {
 			event.preventDefault();
@@ -142,6 +183,11 @@ $(document).ready(function() {
 
 		download.update_button_status(download_button); // Updating download button status (active / unactive)
 		download.update_button_status(delete_button); // Updating delete button status (active / unactive)
+	});
+
+	socket.on('folder_created', function(data) {
+		// Update the folder to see new data
+		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) });
 	});
 
 	socket.on('items_deleted', function(data) { // Items successfully deleted event handler

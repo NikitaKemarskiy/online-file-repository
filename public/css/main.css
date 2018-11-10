@@ -10,6 +10,8 @@ html, body {
 }
 
 div.block {
+	position: static;
+	z-index: 1;
 	width: 100%;
 	padding-top: 1%;
 	box-sizing: border-box;
@@ -17,6 +19,8 @@ div.block {
 }
 
 div.path {
+	position: static;
+	z-index: 1;
 	height: 4%;
 	width: 98%;
 	margin: 0 auto;
@@ -89,6 +93,8 @@ div.path span.button.folder {
 }
 
 div.storage {
+	position: static;
+	z-index: 1;
 	color: #696969;
 	padding: 0;
 	border: 1px solid #1a1b21;
@@ -97,7 +103,6 @@ div.storage {
 	margin: 0 auto;
 	margin-bottom: 0.7%;
 	background-color: #fff;
-	border-radius: 4px;
 	overflow: auto;
 }
 
@@ -106,6 +111,8 @@ div.storage:drag-over {
 }
 
 div.footer {
+	position: static;
+	z-index: 1;
 	text-align: center;
 	width: 100%;
 	color: #fff;
@@ -159,9 +166,116 @@ a.button, span.button {
 	border: 1px solid #fff;	
 }
 
+div.create-folder-block {
+	position: fixed;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-x: 0;
+	overflow-y: 0;
+	background-color: none;
+}
+
+div.create-folder-block div.create-folder {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: rgba(0, 0, 0, 0.8)
+}
+
+div.create-folder-block div.create-folder div.create-folder-window-block {
+	width: 100%;
+	height: 100%;
+	background-color: none;
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window-block div.create-folder-window {
+	position: relative;
+	z-index: 30;
+	color: #2f313d;
+	text-align: center;
+	font-size: 18px;
+	width: 430px;
+	height: 200px;
+	top: -50px;
+	background-color: #fff;
+	padding-top: 5px;
+	opacity: 1;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window p {
+	float: left;
+	margin-left: 7.5%;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window p.error-message {
+	display: block;
+	width: 85%;
+	margin: 0;
+	text-align: left;
+	padding-left: 7.5%;
+	font-size: 12px;
+	color: #cc0033;
+	margin-bottom: 25px;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window input {
+	width: 85%;
+	height: 20px;
+	margin: 0 auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #a5a4a4;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window input.error {
+	background-color: #fce4e4;
+	border: 1px solid #cc0033;
+	outline: none;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window div.create-folder-button {
+	display: inline-block;
+	cursor: pointer;
+	float: right;
+	margin-right: 25px;
+	margin-left: -10px;
+	width: 90px;
+	height: 30px;
+	padding-top: 4px;
+	box-sizing: border-box;
+	border-radius: 3px;
+}
+
+div.create-folder-block div.create-folder div.create-folder-window div.create-folder-button.create {
+	background-color: #1ab188;
+	color: #fff;
+}
+
 div.upload-block {
 	pointer-events: none;
 	position: fixed;
+	z-index: 10;
 	width: 100%;
 	height: 100%;
 	margin: 0;
@@ -171,7 +285,7 @@ div.upload-block {
 }
 
 
-div.upload-block.unvisible {
+div.unvisible, p.unvisible {
 	visibility: hidden;
 }
 
@@ -186,8 +300,7 @@ div.upload-block div.upload {
 	width: 100%;
 	height: 100%;
 	text-align: center;
-	background-color: #000;
-	opacity: 0.8;
+	background-color: rgba(0, 0, 0, 0.8);
 }
 
 div.upload-block div.upload div.upload-text {
@@ -212,7 +325,7 @@ div.upload-block div.upload div.upload-text {
     font-size: 50px;
 	color: #bababa;
 	font-weight: 700;
-	text-shadow: -2px -2px 1px #000, 2px 2px 1px #000;
+	text-shadow: -1px -1px 6px #000, 1px 1px 6px #000;
 }
 
 div.upload-block div.upload div.upload-text p {

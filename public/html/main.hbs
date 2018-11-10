@@ -22,6 +22,20 @@
 		</div>
 	</div>
 
+	<div class="create-folder-block unvisible">
+		<div class="create-folder">
+			<div class="create-folder-window-block">
+				<div class="create-folder-window">
+					<p>New folder name:</p>
+					<input type="text">
+					<p class="error-message unvisible">File name must be less that 64 characters and not contain following characters: &bsol; &sol; &colon; &ast; &quest; &lt; &gt; &verbar;</p>
+					<div class="create-folder-button create">Create</div>
+					<div class="create-folder-button cancel">Cancel</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Header -->
 	<div class="header">
 		<!-- User's email -->
@@ -90,10 +104,6 @@
 		<input type="text" name="email" class="email">
 		<input type="text" name="path" class="path">
 		<input type="text" name="items" class="items">
-	</form>
-
-	<form action="/files/upload" method="post" target="_blank" id="upload" class="upload">
-		<input type="file" name="files" class="files" multiple>
 	</form>
 
 </body>

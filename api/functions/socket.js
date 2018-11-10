@@ -14,7 +14,7 @@ const socket = function(io, storage) {
 		console.log(`User was connected -> ${socket.id}`);
 
 		socket.on('show_directory', function(data) { // Show directory event handler
-
+			
 			// Getting files that are in the directory
 			storage.show_directory(data.path).then(function(items) { 
 				
@@ -23,8 +23,18 @@ const socket = function(io, storage) {
 			});
 		});
 
-		socket.on('delete_items', function(data) { // Delete items event handler
+		socket.on('create_folder', function(data) {
+			
+			let folder_path = path.join(STORAGE_PATH, data.email, data.path, data.folder_name);
+			
+			storage.create_directory(folder_path).then(function() {
+				io.sockets.connected[socket.id].emit('folder_created', {}); // Emitting socket event
+			}).catch(function(error) {
+				console.error(`Error: ${error.message}`);
+			});
+		});
 
+		socket.on('delete_items', function(data) { // Delete items event handler
 			// Parsing JSON string with items into array
 			data.items = JSON.parse(data.items);
 
