@@ -167,6 +167,21 @@ const processing = { // Functions for processing some data
 		return path_string;
 	},
 
+	// Function that creates form data with files to upload
+	create_upload_form_data: function(current_path, user_email, files) {
+		
+		let formData = new FormData();
+		let upload_path = processing.parse_path_into_string(current_path);
+
+		formData.append('path', upload_path); // Adding path to upload
+		formData.append('email', user_email); // Adding user email
+		for (let i = 0; i < files.length; i++) { // Adding files to upload
+			formData.append('files', files[i]);
+		}
+		
+		return formData;
+	},
+
 	// Function that prevent click event for parental elements
 	prevent_click_for_parental_element: function(event) {
 

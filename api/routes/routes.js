@@ -2,6 +2,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
 
 // Constants
 const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
@@ -9,6 +10,21 @@ const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant v
 
 // Initialization
 const router = express.Router();
+const upload_storage = multer.diskStorage({
+	destination: function (req, file, callback) { // Function which sets the folder for uploading files
+		let upload_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
+		callback(null, upload_path);
+	},
+	filename: function (req, file, callback) { // Functions which sets uploaded file name
+		callback(null, file.originalname);
+	}
+});
+const upload = multer({ 
+	storage: upload_storage,
+	limits: {
+		fileSize: 1024 * 1024 * 1024 // 1GB limit 
+	}
+}).array('files');
 
 // Functions
 const authorization = require('../functions/authorization.js'); // Authorization functions
@@ -178,6 +194,21 @@ const router_init = function(io, config) {
 					}
 				});
 			}); 
+		});
+	});
+
+	router.post('/files/upload', function(req, res) {
+		upload(req, res, function(error) {
+			if (error instanceof multer.MulterError) {
+		    	console.error(`Error: ${error.message}`);
+		    	res.end('Error uploading files');
+		    } else if (error) { // An unknown error occurred when uploading.
+		    	console.error(`Error: ${error.message}`);	
+		    	res.end('Error uploading files');
+		    } else {
+				console.dir(req.files);
+				res.end('Files were successfully uploaded');
+			}
 		});
 	});
 

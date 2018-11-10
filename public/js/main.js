@@ -6,12 +6,17 @@ $(document).ready(function() {
 	const current_path = ['/']; // Current storage path
 
 	// jQuery elements
+	const upload_block = $('.upload-block').eq(0);
+	const storage = $('.storage').eq(0);
 	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
-	const download_button = $('.path .button.download'); // Button for downloading files
-	const delete_button = $('.path .button.delete'); // Button for deleting files
+	const download_button = $('.path .button.download').eq(0); // Button for downloading files
+	const delete_button = $('.path .button.delete').eq(0); // Button for deleting files
 	const path_paragraph = $('.path p').eq(0); // Paragraph which contains path
 	const download_form = $('form.download').eq(0); // Form for downloading files
 	const delete_form = $('form.delete').eq(0); // Form for deleting files
+
+	// Variables
+	let dragenter_counter = 0;
 
 	// Click events
 	files_list.on('click', 'li', function() { // Click at the storage item
@@ -72,6 +77,50 @@ $(document).ready(function() {
 			socket.emit('delete_items', items);
 		}
 	});
+
+	storage.on('drag dragstart dragend dragover dragenter dragleave drop', function(event) {
+			event.preventDefault();
+	    	event.stopPropagation();
+		})
+		.on('dragover dragenter', function() {
+			upload_block.removeClass('unvisible');
+		})
+		.on('dragenter', function(event) {
+			dragenter_counter++;
+		})
+		.on('dragleave', function() {
+			dragenter_counter--;
+			if (dragenter_counter <= 0) {
+				upload_block.addClass('unvisible');
+			}
+		})
+		.on('drop', function(event) {
+			
+			upload_block.addClass('unvisible');
+			dragenter_counter = 0;
+			
+			let files = event.originalEvent.dataTransfer.files; // Getting dropped files
+			let formData = processing.create_upload_form_data(current_path, user_email, files); // Creating form data with files to upload
+			
+			console.dir(formData);
+
+			$.ajax({ // Sending created form data using POST method
+		        type: "POST",
+		        enctype: 'multipart/form-data',
+		        url: "/files/upload",
+		        data: formData,
+		        processData: false, //prevent jQuery from automatically transforming the data into a query string
+		        contentType: false, // prevent jQuery from setting Content-Type header
+		        cache: false, // prevent browser from caching response page
+		        success: (data) => {
+		            socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) }); // Go to this folder
+		        },
+		        error: (error) => {
+		           	console.error(`Error: ${error.message}`);
+		        }
+			});
+		});
+
 
 	// Socket.io
 	socket.on('show_directory', function(data) { // Show directory event handler

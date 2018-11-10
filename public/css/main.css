@@ -29,7 +29,7 @@ div.path p {
 	font-size: 18px;
 }
 
-div.path div.animation {
+/*div.path div.animation {
 	margin: 0;
 	padding: 0;
 	margin-right: 15px;
@@ -49,9 +49,9 @@ div.path div.animation {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-}
+}*/
 
-form.download, form.delete {
+form.download, form.delete, form.upload {
 	display: none;
 }
 
@@ -84,6 +84,7 @@ div.path span.button.delete.unactive {
 }
 
 div.storage {
+	color: #696969;
 	padding: 0;
 	border: 2px solid #696969;
 	width: 98%;
@@ -93,6 +94,10 @@ div.storage {
 	background-color: #fff;
 	border-radius: 4px;
 	overflow: auto;
+}
+
+div.storage:drag-over {
+	background-color: red;
 }
 
 div.footer {
@@ -149,9 +154,69 @@ a.button, span.button {
 	border: 1px solid #fff;	
 }
 
+div.upload-block {
+	pointer-events: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+
+div.upload-block.unvisible {
+	visibility: hidden;
+}
+
+div.upload-block * {
+	pointer-events: none;
+}
+
+div.upload-block div.upload {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	background-color: #000;
+	opacity: 0.8;
+}
+
+div.upload-block div.upload div.upload-text {
+	background-color: none;
+	width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    font-size: 50px;
+	color: #bababa;
+	font-weight: 700;
+	text-shadow: -2px -2px 1px #000, 2px 2px 1px #000;
+}
+
+div.upload-block div.upload div.upload-text p {
+	position: relative;
+	top: -25px;
+}
+
 div.storage ul {
 	width: 100%;
-	color: #696969;
 	font-size: 18px;
 	padding: 0;
 	margin: 0;

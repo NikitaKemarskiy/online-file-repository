@@ -13,6 +13,15 @@
 </head>
 <body>
 	
+	<!-- Upload fixed window -->
+	<div class="upload-block unvisible">
+		<div class="upload">
+			<div class="upload-text">
+				<p>Drop files here to upload</p>
+			</div>
+		</div>
+	</div>
+
 	<!-- Header -->
 	<div class="header">
 		
@@ -23,7 +32,6 @@
 		
 		<!-- Storage size and sign out button -->
 		<div class="header-block">
-			
 			<div class="header-text header-storage">{{storage_size}}</div>
 
 			<div class="header-text header-button">
@@ -33,14 +41,12 @@
 				</a>
 
 			</div>
-
 		</div>
 
 	</div>
 
 	<!-- User's storage -->
 	<div class="block">
-		
 		<div class="path">
 			<p>path: /</p>
 			
@@ -51,11 +57,9 @@
 			<span class="button delete unactive">
 				Delete files
 			</span>
-
 		</div>
 
 		<div class="storage">
-			
 			<ul>
 				{{#each items}}
 					<li class="{{this.type}}">
@@ -65,11 +69,9 @@
 					</li>
 				{{/each}}
 			</ul>
-
 		</div>
 
 		<div class="footer"><p>&copy; Nikita Kemarskiy</p></div>
-
 	</div>
 
 	<form action="/files/download" method="post" target="_blank" id="download" class="download">

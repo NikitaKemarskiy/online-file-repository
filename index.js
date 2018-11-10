@@ -20,7 +20,7 @@ const io = socket_io.listen(http_server);
 server.engine('hbs', hbs({ extname: 'hbs' })); // Templating ("Handlebars") 
 server.set('view engine', 'hbs');
 server.set('views', __dirname);
-server.use(body_parser.urlencoded({ extended: false })); // Body parser to process post requests
+server.use(body_parser.urlencoded({ extended: true })); // Body parser to process post requests
 server.use(body_parser.json());
 server.use(session(config.session)); // Session
 
