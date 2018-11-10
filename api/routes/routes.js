@@ -12,7 +12,7 @@ const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant v
 const router = express.Router();
 const upload_storage = multer.diskStorage({
 	destination: function (req, file, callback) { // Function which sets the folder for uploading files
-		let upload_path = path.join(STORAGE_PATH, req.body.email, req.body.path);
+		let upload_path = path.join(STORAGE_PATH, req.body.email, req.body.path); // Path for uploading files
 		callback(null, upload_path);
 	},
 	filename: function (req, file, callback) { // Functions which sets uploaded file name
@@ -22,7 +22,7 @@ const upload_storage = multer.diskStorage({
 const upload = multer({ 
 	storage: upload_storage,
 	limits: {
-		fileSize: 1024 * 1024 * 1024 // 1GB limit 
+		fileSize: 1024 * 1024 * 1024 * 5// 5GB limit 
 	}
 }).array('files');
 
@@ -197,15 +197,18 @@ const router_init = function(io, config) {
 		});
 	});
 
-	router.post('/files/upload', function(req, res) {
-		upload(req, res, function(error) {
-			if (error instanceof multer.MulterError) {
+	router.post('/files/upload', function(req, res) { // Upload files post request handler
+
+		upload(req, res, function(error) { // Calling function for files upload
+			if (error instanceof multer.MulterError) { // Error (invalid files)
 		    	console.error(`Error: ${error.message}`);
+		    	res.header('StatusCode', '400');
 		    	res.end('Error uploading files');
-		    } else if (error) { // An unknown error occurred when uploading.
-		    	console.error(`Error: ${error.message}`);	
+		    } else if (error) { // Unhandled error in code
+		    	console.error(`Error: ${error.message}`);
+		    	res.header('StatusCode', '400');	
 		    	res.end('Error uploading files');
-		    } else {
+		    } else { // Everything is ok
 				console.dir(req.files);
 				res.end('Files were successfully uploaded');
 			}

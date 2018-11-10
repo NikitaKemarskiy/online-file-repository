@@ -170,10 +170,10 @@ const processing = { // Functions for processing some data
 	// Function that creates form data with files to upload
 	create_upload_form_data: function(current_path, user_email, files) {
 		
-		let formData = new FormData();
-		let upload_path = processing.parse_path_into_string(current_path);
+		let formData = new FormData(); // New form data, that will contain info for uploading and files
+		let upload_path = processing.parse_path_into_string(current_path); // Path for uploading
 
-		formData.append('path', upload_path); // Adding path to upload
+		formData.append('path', upload_path); // Adding path for uploading
 		formData.append('email', user_email); // Adding user email
 		for (let i = 0; i < files.length; i++) { // Adding files to upload
 			formData.append('files', files[i]);

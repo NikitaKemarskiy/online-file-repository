@@ -2,30 +2,32 @@ $(document).ready(function() {
 
 	// Constants
 	const socket = io(); // Socket initialization
-	const user_email = $('.header-email').eq(0).text().replace(/\s/g, ''); // User's email
+	const user_email = $('div.header-email').eq(0).text().replace(/\s/g, ''); // User's email
 	const current_path = ['/']; // Current storage path
 
 	// jQuery elements
 	const upload_block = $('.upload-block').eq(0);
-	const storage = $('.storage').eq(0);
-	const files_list = $('.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
-	const download_button = $('.path .button.download').eq(0); // Button for downloading files
-	const delete_button = $('.path .button.delete').eq(0); // Button for deleting files
-	const path_paragraph = $('.path p').eq(0); // Paragraph which contains path
+	const storage = $('div.storage').eq(0);
+	const loader_spinner = $('div.path div.animation').eq(0);
+	const files_list = $('div.storage ul').eq(0); // Ul in the storage, which contains li elements (files)
+	const download_button = $('div.path span.button.download').eq(0); // Button for downloading files
+	const delete_button = $('div.path span.button.delete').eq(0); // Button for deleting files
+	const path_paragraph = $('div.path p').eq(0); // Paragraph which contains path
 	const download_form = $('form.download').eq(0); // Form for downloading files
 	const delete_form = $('form.delete').eq(0); // Form for deleting files
 
 	// Variables
-	let dragenter_counter = 0;
+	let dragenter_counter = 0; // Counter for drag events to prevent dragleave event when hover child elements
 
 	// Click events
 	files_list.on('click', 'li', function() { // Click at the storage item
 
 		if (this.classList[0] === 'folder') { // Clicked item is a folder
 
-			let folder_name = $(this).children().children('.storage-element').eq(0).text(); // Clicked folder name
+			let folder_name = $(this).children().children('div.storage-element').eq(0).text(); // Clicked folder name
 
-			socket.emit('show_directory', { path: user_email + directory.change_directory(folder_name, current_path, path_paragraph, files_list) }); // Go to this folder
+			// Go to this folder
+			socket.emit('show_directory', { path: user_email + directory.change_directory(folder_name, current_path, path_paragraph, files_list) }); 
 		}
 	});
 
@@ -78,6 +80,7 @@ $(document).ready(function() {
 		}
 	});
 
+	// Drag events for uploading files
 	storage.on('drag dragstart dragend dragover dragenter dragleave drop', function(event) {
 			event.preventDefault();
 	    	event.stopPropagation();
@@ -86,37 +89,41 @@ $(document).ready(function() {
 			upload_block.removeClass('unvisible');
 		})
 		.on('dragenter', function(event) {
-			dragenter_counter++;
+			dragenter_counter++; // Incrementing drag counter
 		})
 		.on('dragleave', function() {
-			dragenter_counter--;
-			if (dragenter_counter <= 0) {
+			dragenter_counter--; // Decrementing drag counter
+			// If dragleave occured to storage window -> make "drag and drop" window invisible
+			if (dragenter_counter <= 0) { 
 				upload_block.addClass('unvisible');
 			}
 		})
 		.on('drop', function(event) {
 			
 			upload_block.addClass('unvisible');
-			dragenter_counter = 0;
-			
+			dragenter_counter = 0; 
+			loader_spinner.css('display', 'block'); // Enable animation spinner
+
 			let files = event.originalEvent.dataTransfer.files; // Getting dropped files
-			let formData = processing.create_upload_form_data(current_path, user_email, files); // Creating form data with files to upload
-			
-			console.dir(formData);
+			// Creating form data with files to upload
+			let formData = processing.create_upload_form_data(current_path, user_email, files); 
 
 			$.ajax({ // Sending created form data using POST method
 		        type: "POST",
 		        enctype: 'multipart/form-data',
 		        url: "/files/upload",
-		        data: formData,
-		        processData: false, //prevent jQuery from automatically transforming the data into a query string
-		        contentType: false, // prevent jQuery from setting Content-Type header
-		        cache: false, // prevent browser from caching response page
-		        success: (data) => {
-		            socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) }); // Go to this folder
-		        },
-		        error: (error) => {
-		           	console.error(`Error: ${error.message}`);
+		        data: formData, // Form data with info for uploading and files
+		        processData: false, // Prevent jQuery from automatically transforming the data into a query string
+		        contentType: false, // Prevent jQuery from setting Content-Type header
+		        cache: false, // Prevent browser from caching response page
+		        success: (data) => { // Files were successfully uploaded 
+		        	// Update the folder to see new data
+		            socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) }); 
+		            loader_spinner.css('display', 'none'); // Stop animation spinner
+		        }, 
+		        error: (error) => { // Error occured on server
+		           	alert('Error uploading files');
+		           	loader_spinner.css('display', 'none'); // Stop animation spinner
 		        }
 			});
 		});
@@ -126,12 +133,11 @@ $(document).ready(function() {
 	socket.on('show_directory', function(data) { // Show directory event handler
 
 		if (current_path.length > 1) { // If new folder isn't a root directory
-
-			files_list.append(`<li class="folder"><label><div class="storage-element">..</div></label></li>`); // Add an item of the parental folder '..'
+			// Add an item of the parental folder '..'
+			files_list.append(`<li class="folder"><label><div class="storage-element">..</div></label></li>`); 
 		}
 
 		for (let i = 0; i < data.items.length; i++) { // Append every sent item in the storage div
-			
 			files_list.append(`<li class="${data.items[i].type}"><label><input type="checkbox"><div class="storage-element">${data.items[i].name}</div></label></li>`);
 		}
 
@@ -140,7 +146,7 @@ $(document).ready(function() {
 	});
 
 	socket.on('items_deleted', function(data) { // Items successfully deleted event handler
-
-		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) }); // Go to this folder
+		// Update the folder to see new data
+		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) });
 	});
 });
