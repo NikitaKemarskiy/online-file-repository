@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Admin panel: sign up</title>
+	
+	<link rel="stylesheet" type="text/css" href="/css/sign_in_up.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+	
+	<div class="block">
+		
+		<div class="form">
+
+			<form class="sign_form" method="post" action="/admin/sign_up_handler">
+				
+				<div class="form_wrapper form_header">
+					<h3>Admin panel: sign up</h3>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="text" name="admin_email" placeholder="Your email" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="password" name="admin_password" placeholder="Your password" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="text" name="new_email" placeholder="New admin email" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="text" name="new_login" placeholder="New admin login" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="password" name="new_password" placeholder="New admin password" required>
+				</div>
+
+				<div class="form_wrapper">
+					<input type="password" name="new_confirm_password" placeholder="Confirm new admin password" required>
+				</div>
+
+				{{#if error}}
+				<div class="form_wrapper error">
+					<p>Error: {{error_message}}</p>
+				</div>
+				{{/if}}		
+
+				<div class="form_wrapper form_submit">
+					<input type="submit" value="Submit">
+				</div>
+
+			</form>
+		
+		</div>
+
+	</div>
+
+</body>
+</html>

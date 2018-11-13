@@ -5,7 +5,7 @@ const path = require('path');
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
 // Socket constructor
-const socket = function(io, storage) {
+const socket = function(io, storage, database) {
 
 	// Functions
 	this.connection = function(socket) {
@@ -43,7 +43,13 @@ const socket = function(io, storage) {
 		
 			storage.delete_items(items_path, data.items).then(function(result) { // Deleting items
 				
-				io.sockets.connected[socket.id].emit('items_deleted', {}); // Emitting socket event
+				io.sockets.connected[socket.id].emit('items_deleted', {}); // Emitting items deleted socket event
+			});
+		});
+
+		socket.on('get_item_data', function(email) {
+			database.get_item_data(email).then(function(data) {
+				io.sockets.connected[socket.id].emit('item_data', data); // Emitting socket event
 			});
 		});
 	}

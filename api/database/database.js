@@ -92,6 +92,68 @@ const find_item = function(email) { // Find the item in the database
 	});
 }
 
+const show_all_items = function() { // Show all database items (users)
+
+	return new Promise(function(resolve, reject) {
+
+		user.find({}, function(error, items) {
+			
+			let itemsArr = [];
+
+			for (let i = 0; i < items.length; i++) {
+				
+				let obj = {
+					email: items[i].email
+				}
+				/*let obj = {
+					login: items[i].login,
+					email: items[i].email
+				};
+
+				if (items[i].admin) {
+					obj.admin = true;
+				} else {
+					obj.admin = false;
+				}*/
+				
+				itemsArr.push(obj);
+			}
+
+			resolve(itemsArr);
+		});
+	});
+}
+
+const get_item_data = function(email) { // Show special item info
+
+	return new Promise(function(resolve, reject) {
+
+		user.find({ email: email }, function(error, items) {
+
+			if (error) {
+				console.error(`Database search error: ${error.message}`);
+			} else {
+				if (items.length > 0) {
+					let obj = {
+						login: items[0].login,
+						email: items[0].email
+					}
+
+					if (items[0].admin) {
+						obj.admin = true;
+					} else {
+						obj.admin = false;
+					}
+
+					resolve(obj);
+				} else {
+					resolve(false);
+				}
+			}
+		})
+	});
+}
+
 const check_item = function(email) { // Check if the item with specific email and password exists
 
 	return new Promise(function(resolve, reject) {
@@ -135,6 +197,8 @@ module.exports = {
 	connect,
 	add_item,
 	find_item,
+	show_all_items,
+	get_item_data,
 	check_item,
 	check_admin_item,
 	add_admin_item

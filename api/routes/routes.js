@@ -40,7 +40,7 @@ const router_init = function(io, config) {
 	database.connect(config.database.host, config.database.port, config.database.name);
 
 	// Functions
-	const socket = new socket_constructor(io, storage); // Socket.io functions
+	const socket = new socket_constructor(io, storage, database); // Socket.io functions
 	const archiver = new archiver_constructor(storage); // Archiver function
 
 	// Socket.io
@@ -118,9 +118,13 @@ const router_init = function(io, config) {
 				res.header('StatusCode', '200');
 				res.header('Content-Type', 'text/html; charset=utf-8');
 
-				res.render(path.join(process.cwd(), 'public/html/admin.hbs'), {
-					user_email: req.session.email
-				});
+				database.show_all_items().then(function(items) {
+					
+					res.render(path.join(process.cwd(), 'public/html/admin.hbs'), {
+						user_email: req.session.email,
+						items: items
+					});
+				});	
 			}
 		}
 	});
@@ -141,6 +145,40 @@ const router_init = function(io, config) {
 		res.render(path.join(process.cwd(), 'public/html/admin_sign_in.hbs'), { error: true, error_message: req.params.error_message });
 	});
 
+	router.get('/admin/sign_up', function(req, res) { // Admin panel sign up page
+
+		if (req.session.authorized_admin === undefined) { // Admin isn't authorized -> to the admin sign_in page
+			res.redirect('/admin/sign_in');
+		}  else { // Admin isn't authorized -> to the admin sign_in page
+			if (!req.session.authorized_admin) {
+				res.redirect('/admin/sign_in');
+			} else { // Admin is authorized -> to the admin panel page
+
+				res.header('StatusCode', '200');
+				res.header('Content-Type', 'text/html; charset=utf-8');
+
+				res.render(path.join(process.cwd(), 'public/html/admin_sign_up.hbs'));
+			}
+		}
+	});
+
+	router.get('/admin/sign_up/:error_message', function(req, res) { // Admin panel sign up page
+
+		if (req.session.authorized_admin === undefined) { // Admin isn't authorized -> to the admin sign_in page
+			res.redirect('/admin/sign_in');
+		}  else { // Admin isn't authorized -> to the admin sign_in page
+			if (!req.session.authorized_admin) {
+				res.redirect('/admin/sign_in');
+			} else { // Admin is authorized -> to the admin panel page
+
+				res.header('StatusCode', '200');
+				res.header('Content-Type', 'text/html; charset=utf-8');
+
+				res.render(path.join(process.cwd(), 'public/html/admin_sign_up.hbs'), { error: true, error_message: req.params.error_message });
+			}
+		}
+	});
+
 	router.post('/admin/sign_in_handler', function(req, res) { // Admin panel sign in post handler
 		
 		authorization.check_admin_sign_in(req.body.email, req.body.password, database).then(function(result) { // Checking admin sign in data
@@ -152,6 +190,44 @@ const router_init = function(io, config) {
 
 				res.redirect('/admin');
 
+			} else { // Admin isn't in database -> redirect to the sign_in page with an error message
+
+				let error_message = encodeURIComponent('invalid email or password');
+
+				res.redirect(`/admin/sign_in/${error_message}`);
+			}
+		});
+	});
+
+	router.post('/admin/sign_up_handler', function(req, res) { // Admin panel sign up post handler
+
+		authorization.check_admin_sign_in(req.body.admin_email, req.body.admin_password, database).then(function(result) { // Checking existing admin data
+
+			if (result) { // Admin is in a database -> success
+
+				authorization.check_sign_up( // Checking sign up data
+					req.body.new_email,
+					req.body.new_login,
+					req.body.new_password,
+					req.body.new_confirm_password,
+					database
+				).then(function(check_sign_up_result) {
+
+					if (check_sign_up_result.success) { // Sign up data is valid -> success
+
+						// Save new user in a database
+						database.add_admin_item(req.body.new_login, check_sign_up_result.hash, req.body.new_email).then(function() { 
+
+							res.redirect('/admin');
+						});
+
+					} else { // Sign up data is invalid -> error
+
+						let error_message = encodeURIComponent(check_sign_up_result.error_message);
+
+						res.redirect(`/admin/sign_up/${error_message}`);
+					}
+				});				
 			} else { // Admin isn't in database -> redirect to the sign_in page with an error message
 
 				let error_message = encodeURIComponent('invalid email or password');

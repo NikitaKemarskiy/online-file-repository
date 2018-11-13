@@ -5,7 +5,7 @@ $(document).ready(function() {
 	const user_email = $('div.header-email').eq(0).text().replace(/\s/g, ''); // User's email
 	const current_path = ['/']; // Current storage path
 
-	// jQuery elements
+	// jQuery selectors
 	const upload_block = $('div.upload-block').eq(0);
 	const create_folder_block = $('div.create-folder-block').eq(0);
 	const create_folder_input = $('div.create-folder-block input').eq(0);
