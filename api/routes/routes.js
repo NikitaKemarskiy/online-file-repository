@@ -50,12 +50,10 @@ const router_init = function(io, config) {
 	router.get('/', function(req, res) { // Main page
 
 		if (req.session.authorized === undefined) { // User isn't authorized -> to the sign_in page
-
 			res.redirect('sign_in');
 		} else {
-
+			
 			if (!req.session.authorized) { // User isn't authorized -> to the sign_in page
-
 				res.redirect('sign_in');
 			}  else { // User is authorized -> to the main page
 
@@ -97,7 +95,7 @@ const router_init = function(io, config) {
 		res.header('StatusCode', '200');
 		res.header('Content-Type', 'text/html; charset=utf-8');
 
-		res.render(path.join(process.cwd(), 'public/html/sign_up.hbs'), { error: false });
+		res.render(path.join(process.cwd(), 'public/html/sign_up.hbs'));
 	});
 
 	router.get('/sign_up/:error_message', function(req, res) { // Sign up page with an error message
@@ -106,6 +104,61 @@ const router_init = function(io, config) {
 		res.header('Content-Type', 'text/html; charset=utf-8');
 
 		res.render(path.join(process.cwd(), 'public/html/sign_up.hbs'), { error: true, error_message: req.params.error_message });
+	});
+
+	router.get('/admin', function(req, res) { // Admin panel main page
+
+		if (req.session.authorized_admin === undefined) { // Admin isn't authorized -> to the admin sign_in page
+			res.redirect('/admin/sign_in');
+		}  else { // Admin isn't authorized -> to the admin sign_in page
+			if (!req.session.authorized_admin) {
+				res.redirect('/admin/sign_in');
+			} else { // Admin is authorized -> to the admin panel page
+
+				res.header('StatusCode', '200');
+				res.header('Content-Type', 'text/html; charset=utf-8');
+
+				res.render(path.join(process.cwd(), 'public/html/admin.hbs'), {
+					user_email: req.session.email
+				});
+			}
+		}
+	});
+
+	router.get('/admin/sign_in', function(req, res) { // Admin panel sign in page
+
+		res.header('StatusCode', '200');
+		res.header('Content-Type', 'text/html; charset=utf-8');
+
+		res.render(path.join(process.cwd(), 'public/html/admin_sign_in.hbs'));
+	});
+
+	router.get('/admin/sign_in/:error_message', function(req, res) { // Admin panel sign in page with error
+
+		res.header('StatusCode', '200');
+		res.header('Content-Type', 'text/html; charset=utf-8');
+
+		res.render(path.join(process.cwd(), 'public/html/admin_sign_in.hbs'), { error: true, error_message: req.params.error_message });
+	});
+
+	router.post('/admin/sign_in_handler', function(req, res) { // Admin panel sign in post handler
+		
+		authorization.check_admin_sign_in(req.body.email, req.body.password, database).then(function(result) { // Checking admin sign in data
+
+			if (result) { // Admin is in a database -> success
+				
+				req.session.authorized_admin = true; // Input in session, that admin is authorized
+				req.session.email = req.body.email; // Input admin's email in session
+
+				res.redirect('/admin');
+
+			} else { // Admin isn't in database -> redirect to the sign_in page with an error message
+
+				let error_message = encodeURIComponent('invalid email or password');
+
+				res.redirect(`/admin/sign_in/${error_message}`);
+			}
+		});
 	});
 
 	router.post('/sign_in_handler', function(req, res) { // Sign in post handler
@@ -119,7 +172,7 @@ const router_init = function(io, config) {
 
 				res.redirect('/');
 
-			} else { // User isn't in a database
+			} else { // User isn't in a database -> redirect to the sign_in page with an error message
 
 				let error_message = encodeURIComponent('invalid email or password');
 
@@ -140,7 +193,8 @@ const router_init = function(io, config) {
 
 			if (check_sign_up_result.success) { // Sign up data is valid -> success
 
-				database.add_item(req.body.login, check_sign_up_result.hash, req.body.email).then(function() { // Save new user in the database
+				// Save new user in a database
+				database.add_item(req.body.login, check_sign_up_result.hash, req.body.email).then(function() { 
 
 					req.session.authorized = true;
 					req.session.email = req.body.email;
@@ -159,8 +213,10 @@ const router_init = function(io, config) {
 
 	router.get('/sign_out_handler', function(req, res) { // Sign out handler
 
-		req.session.email = undefined; // Deleting user's session data and making him unauthorized
+		// Deleting user's session data and making him unauthorized
+		req.session.email = undefined; 
 		req.session.authorized = undefined;
+		req.session.authorized_admin = undefined;
 
 		res.redirect('/sign_in');
 	});

@@ -7,21 +7,46 @@ const check_sign_in = function(email, password, database) { // Function that che
 
 	return new Promise(function(resolve, reject) {
 
-		database.check_item(email).then(function(result) { // Checking is user in the database
+		database.check_item(email).then(function(result) { // Checking if user in a database
 				
 			if (result.exists) { // User is in a database
 				
-				argon2.verify(result.password, password).then(match => { // Verifying the password
+				argon2.verify(result.password, password).then(function(match) { // Verifying the password
 					if (match) { // Password is right -> authorize the user
 				   		resolve(true);
 				  	} else { // Password is wrong -> resolve false
 				    	resolve(false);
 				  	}
-				}).catch(err => {
+				}).catch(function(error) {
 					console.error(`Error: ${error.message}`);
 				});
 			
 			} else { // User isn't in a database -> resolve false
+				resolve(false);
+			}
+		});
+	});
+}
+
+const check_admin_sign_in = function(email, password, database) { // Function that checks if admin sign in info valid
+
+	return new Promise(function(resolve, reject) {
+
+		database.check_admin_item(email).then(function(result) { // Checking if the admin in a database
+
+			if (result.exists) { // Admin is in a database
+
+				argon2.verify(result.password, password).then(function(match) { // Verifying the password
+					if (match) { // Password is right -> authorize the user
+				   		resolve(true);
+				  	} else { // Password is wrong -> resolve false
+				    	resolve(false);
+				  	}
+				}).catch(function(error) {
+					console.error(`Error: ${error.message}`);
+				});
+
+			} else { // Admin isn't in a database -> resolve false
 				resolve(false);
 			}
 		});
@@ -105,5 +130,6 @@ const check_if_exists = function(email, database) { // Function that checks if u
 module.exports = {
 	check_sign_in,
 	check_sign_up,
+	check_admin_sign_in,
 	check_if_exists
 }

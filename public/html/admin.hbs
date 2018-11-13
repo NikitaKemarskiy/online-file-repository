@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Storage</title>
+	
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/admin_functions.js"></script>
+	<script type="text/javascript" src="../js/admin.js"></script>
+</head>
+<body>
+
+	<!-- Header -->
+	<div class="header">
+		<!-- User's email -->
+		<div class="header-text header-email">
+			{{user_email}}
+		</div>
+		
+		<!-- Storage size and sign out button -->
+		<div class="header-block">
+
+			<div class="header-text header-button">
+
+				<a class="button" href="sign_out_handler">
+					Sign out
+				</a>
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

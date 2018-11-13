@@ -27,9 +27,9 @@ const config = function(session) {
 		store: new MongoStore({
 	      	url: 'mongodb://localhost/file_storage_sessions'
 	    })
-	}
+	};
 }
 
 module.exports = config;
 
-//77.47.209.52
+// 77.47.209.52
