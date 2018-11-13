@@ -105,16 +105,6 @@ const show_all_items = function() { // Show all database items (users)
 				let obj = {
 					email: items[i].email
 				}
-				/*let obj = {
-					login: items[i].login,
-					email: items[i].email
-				};
-
-				if (items[i].admin) {
-					obj.admin = true;
-				} else {
-					obj.admin = false;
-				}*/
 				
 				itemsArr.push(obj);
 			}

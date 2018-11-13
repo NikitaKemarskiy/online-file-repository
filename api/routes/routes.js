@@ -64,11 +64,25 @@ const router_init = function(io, config) {
 
 				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
 
-					res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
-						user_email: req.session.email, 
-						storage_size: ``,
-						items: items
-					});
+					if (req.session.authorized_admin) { // The user is an admin
+						
+						database.show_all_items().then(function(emails) {
+							
+							res.render(path.join(process.cwd(), 'public/html/main_admin.hbs'), {
+								user_email: req.session.email, 
+								storage_size: ``,
+								items: items,
+								emails: emails
+							});
+						});	
+
+					} else {
+						res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
+							user_email: req.session.email, 
+							storage_size: ``,
+							items: items
+						});
+					}
 				});
 			}
 		}

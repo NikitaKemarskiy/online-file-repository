@@ -1,0 +1,44 @@
+div.header div.admin-email-list {
+	display: inline-block;
+	border: none;
+}
+
+div.header img.triangle {
+	width: 10px;
+	margin-left: 2px;
+}
+
+div.header div.admin-email-list:hover ul {
+	display: inline-block;
+}
+
+div.header ul:hover {
+	display: inline-block;
+}
+
+div.header ul {
+	list-style: none;
+	color: #696969;
+	display: none;	
+	text-align: left;
+	margin: 0;
+	padding: 10px 11px;
+	border: 1px solid #1a1b21;
+	line-height: 30px;
+	position: fixed;
+	left: 7%;
+	top: 38px;
+	z-index: 40;
+	background-color: #fff;
+}
+
+div.header ul li.email-item {
+	border-bottom: 1px solid #a5a4a4;
+	padding: 0 2px;
+	cursor: pointer;
+}
+
+div.header ul li.email-item:hover {
+	color: #fff;
+	background-color: #5c6078;
+}
