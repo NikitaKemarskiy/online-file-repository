@@ -7,6 +7,7 @@ $(document).ready(function() {
 
 	// jQuery selectors
 	const email_items = $('div.header ul li.email-item'); 
+	const storage_size_block = $('div.header div.header-storage').eq(0);
 	const upload_block = $('div.upload-block').eq(0);
 	const create_folder_block = $('div.create-folder-block').eq(0);
 	const create_folder_input = $('div.create-folder-block input').eq(0);
@@ -39,6 +40,7 @@ $(document).ready(function() {
 		// Go to this user storage
 		current_path.splice(1);
 		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) });
+		socket.emit('get_size', user_email);
 	});
 
 	files_list.on('click', 'li', function(event) { // Click at the storage item
@@ -208,5 +210,9 @@ $(document).ready(function() {
 	socket.on('items_deleted', function(data) { // Items successfully deleted event handler
 		// Update the folder to see new data
 		socket.emit('show_directory', { path: user_email + directory.update_directory(current_path, files_list) });
+	});
+
+	socket.on('get_size', function(size) { // Size of user's storage was received
+		storage_size_block.text(size);
 	});
 });

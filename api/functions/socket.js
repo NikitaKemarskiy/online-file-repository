@@ -23,7 +23,7 @@ const socket = function(io, storage, database) {
 			});
 		});
 
-		socket.on('create_folder', function(data) {
+		socket.on('create_folder', function(data) { // Create new folder event handler
 			
 			let folder_path = path.join(STORAGE_PATH, data.email, data.path, data.folder_name);
 			
@@ -47,9 +47,18 @@ const socket = function(io, storage, database) {
 			});
 		});
 
-		socket.on('get_item_data', function(email) {
+		socket.on('get_item_data', function(email) { // Get data about user event handler
 			database.get_item_data(email).then(function(data) {
-				io.sockets.connected[socket.id].emit('item_data', data); // Emitting socket event
+				storage.get_parsed_size(path.join(STORAGE_PATH, email)).then(function(size) {
+					data.size = size;
+					io.sockets.connected[socket.id].emit('item_data', data); // Emitting socket event
+				});
+			});
+		});
+
+		socket.on('get_size', function(email) { // Get size of user's storage event handler
+			storage.get_parsed_size(path.join(STORAGE_PATH, email)).then(function(size) {
+				io.sockets.connected[socket.id].emit('get_size', size); // Emitting socket event
 			});
 		});
 	}

@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const exec = require('child_process').exec;
+const get_size = require('get-folder-size');
 
 // Variables
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
@@ -153,9 +154,15 @@ const show_storage = function(email) { // Function that shows main storage direc
 		check_if_directory_exists(user_path).then(function(result) { // Checking if user's storage already exists
 
 			if (result) { // User's storage already exists -> show it
+				
+				get_parsed_size(user_path).then(function(size) {
 
-				show_directory(email).then(function(items_array) {
-					resolve(items_array);
+					show_directory(email).then(function(items_array) {
+						resolve({
+							items: items_array,
+							size: size
+						});
+					});
 				});
 			} else { // User's storage doesn't exist
 
@@ -195,8 +202,48 @@ const show_directory = function(directory_path) { // Function that shows directo
 	});
 }
 
+const get_parsed_size = function(user_path) { // Function that returns parsed directory size
+
+	return new Promise(function(resolve, reject) {
+		
+		get_size(user_path, function(error, size) {
+
+			if (error) {
+				console.error(`Error: ${error.message}`);
+				resolve(0);
+			} else {
+				resolve(parse_size(size));
+			}
+		});
+	});
+}
+
+const parse_size = function(size) { // Function that parses size from bytes to the other units
+
+	let units = 'Kb'
+	size /= 1024; // Convert size from bytes to Kbytes
+
+	if (size > 1024) { // Size is more than 1Mb
+		units = 'Mb';
+		size /= 1024; // Convert size from Kbytes to Mbytes
+	}
+	if (size > 1024) { // Size is more than 1Gb
+		units = 'Gb';
+		size /= 1024; // Convert size from Mbytes to Gbytes
+	}
+	if (size > 1024) { // Size is more than 1Tb
+		units = 'Tb';
+		size /= 1024; // Convert size from Gbytes to Tbytes
+	}
+
+	size = Math.round(size * 10) / 10;
+
+	return size + units;
+}
+
 // Exports
 module.exports = {
+	get_parsed_size,
 	parse_items,
 	create_directory,
 	delete_items,

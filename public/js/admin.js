@@ -7,6 +7,7 @@ $(document).ready(function() {
 	const users = $('div.users-list ul li.user');
 	const stat_login = $('div.panel div.user-stats p.user-login strong');
 	const stat_email = $('div.panel div.user-stats p.user-email strong');
+	const stat_size = $('div.panel div.user-stats p.user-size strong');
 	const stat_admin = $('div.panel div.user-stats p.user-admin strong');
 
 	// Click events
@@ -19,6 +20,7 @@ $(document).ready(function() {
 	socket.on('item_data', function(data) {
 		stat_login.text(data.login.toString());
 		stat_email.text(data.email.toString());
+		stat_size.text(data.size.toString());
 		stat_admin.text(data.admin.toString());
 	});
 });

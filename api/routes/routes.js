@@ -60,9 +60,7 @@ const router_init = function(io, config) {
 				res.header('StatusCode', '200');
 				res.header('Content-Type', 'text/html; charset=utf-8');
 
-				let storage_size = 100;
-
-				storage.show_storage(req.session.email).then(function(items) { // Show main storage directory
+				storage.show_storage(req.session.email).then(function(result) { // Show main storage directory
 
 					if (req.session.authorized_admin) { // The user is an admin
 						
@@ -70,8 +68,8 @@ const router_init = function(io, config) {
 							
 							res.render(path.join(process.cwd(), 'public/html/main_admin.hbs'), {
 								user_email: req.session.email, 
-								storage_size: ``,
-								items: items,
+								storage_size: result.size,
+								items: result.items,
 								emails: emails
 							});
 						});	
@@ -79,8 +77,8 @@ const router_init = function(io, config) {
 					} else {
 						res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
 							user_email: req.session.email, 
-							storage_size: ``,
-							items: items
+							storage_size: result.size,
+							items: result.items
 						});
 					}
 				});
