@@ -1,6 +1,10 @@
 // Modules
 const is_email = require('isemail');
 const argon2 = require('argon2');
+const path = require('path');
+
+// Libraries
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
 
 // Functions
 const check_sign_in = function(email, password, database) { // Function that checks if sign in info valid
@@ -18,7 +22,7 @@ const check_sign_in = function(email, password, database) { // Function that che
 				    	resolve(false);
 				  	}
 				}).catch(function(error) {
-					console.error(`Error: ${error.message}`);
+					logging.error(`Error: ${error.message}`);
 				});
 			
 			} else { // User isn't in a database -> resolve false
@@ -43,7 +47,7 @@ const check_admin_sign_in = function(email, password, database) { // Function th
 				    	resolve(false);
 				  	}
 				}).catch(function(error) {
-					console.error(`Error: ${error.message}`);
+					logging.error(`Error: ${error.message}`);
 				});
 
 			} else { // Admin isn't in a database -> resolve false
@@ -97,7 +101,7 @@ const check_sign_up = function(email, login, password, confirm_password, databas
 					resolve({ success: true, hash: hash }); // Everything is ok -> sign user up
 				
 				}).catch(function(error) {
-					console.error(`Error: ${error.message}`);
+					logging.error(`Error: ${error.message}`);
 				});
 			} else { // User already exists -> error
 				resolve({ success: false, error_message: 'user with this Email already exists' });

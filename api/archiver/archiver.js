@@ -3,6 +3,9 @@ const jszip = require('jszip');
 const path = require('path');
 const fs = require('fs');
 
+// Functions
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
+
 // Archiver constructor
 const archiver = function(storage) {
 
@@ -57,7 +60,7 @@ const archiver = function(storage) {
 
 					fs.readdir(directory_path, function(error, directory_items) { // Reading this folder
 						if (error) {
-							console.error(`Error: ${error.message}`);
+							logging.error(`Error: ${error.message}`);
 						} else {
 
 							if (directory_items.length === 0) { // Directory is empty
@@ -113,7 +116,7 @@ const archiver = function(storage) {
 
 					fs.readdir(directory_path, function(error, directory_items) { // Reading the folder	
 						if (error) {
-							console.error(`Error: ${error.message}`);
+							logging.error(`Error: ${error.message}`);
 						} else if (directory_items.length === 0) {
 							resolve({
 								directory,
@@ -135,7 +138,7 @@ const archiver = function(storage) {
 											fs.readFile(item_path, function(error, buffer) { // Read file from items array
 
 												if (error) {
-													console.error(`Error: ${error.message}`);
+													logging.error(`Error: ${error.message}`);
 												} else {
 													directory.file(items_parsed[i].name, buffer, { binary: true }); // Inputing file into the zip archive
 
@@ -185,7 +188,7 @@ const archiver = function(storage) {
 								fs.readFile(item_path, function(error, buffer) { // Read file from items array
 									
 									if (error) {
-										console.error(`Error: ${error.message}`);
+										logging.error(`Error: ${error.message}`);
 									} else {
 
 										directory.file(items_parsed[i].name, buffer, { binary: true }); // Inputing file into the zip archive

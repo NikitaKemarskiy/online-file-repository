@@ -1,5 +1,9 @@
 // Modules
 const mongoose = require('mongoose');
+const path = require('path');
+
+// Functions
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
 
 // Variables
 const user_schema = new mongoose.Schema({ // Schema for users in database
@@ -28,10 +32,10 @@ const connect = function(host, port, name) { // Connect to the database
 
 	mongoose.connect(`mongodb://${host}:${port}/${name}`, { useNewUrlParser: true }) 
 		.then(function() { // Success
-			console.log('MongoDB was successfully connected!');
+			logging.log('MongoDB was successfully connected!');
 		})
 		.catch(function(error) { // Error
-			console.error(`Database connection error: ${error.message}`);
+			logging.error(`Database connection error: ${error.message}`);
 		});
 }
 
@@ -47,7 +51,7 @@ const add_item = function(login, password, email) { // Save the item in a databa
 
 		user_item.save(function(error, user_item) {
 			if (error) {
-				console.error(`Database save error: ${error.message}`);
+				logging.error(`Database save error: ${error.message}`);
 			} else {
 				resolve();
 			}
@@ -68,7 +72,7 @@ const add_admin_item = function(login, password, email) { // Save the admin item
 
 		admin_item.save(function(error, admin_item) {
 			if (error) {
-				console.error(`Database save error: ${error.message}`);
+				logging.error(`Database save error: ${error.message}`);
 			} else {
 				resolve();
 			}
@@ -84,7 +88,7 @@ const find_item = function(email) { // Find the item in the database
 
 		user.find({ email: email }, function(error, items) {
 			if (error) {
-				console.error(`Database search error: ${error.message}`);
+				logging.error(`Database search error: ${error.message}`);
 			} else {
 				resolve(items.length);
 			}
@@ -121,7 +125,7 @@ const get_item_data = function(email) { // Show special item info
 		user.find({ email: email }, function(error, items) {
 
 			if (error) {
-				console.error(`Database search error: ${error.message}`);
+				logging.error(`Database search error: ${error.message}`);
 			} else {
 				if (items.length > 0) {
 					let obj = {
@@ -151,7 +155,7 @@ const check_item = function(email) { // Check if the item with specific email an
 		user.find({ email: email }, function(error, items) {
 
 			if (error) {
-				console.error(`Database search error: ${error.message}`);
+				logging.error(`Database search error: ${error.message}`);
 			} else {
 				if (items.length > 0) {
 					resolve({ exists: true, password: items[0].password });
@@ -170,7 +174,7 @@ const check_admin_item = function(email) { // Check if the admin item with speci
 		user.find({ email: email, admin: true }, function(error, items) {
 
 			if (error) {
-				console.error(`Database search error: ${error.message}`);
+				logging.error(`Database search error: ${error.message}`);
 			} else {
 				if (items.length > 0) {
 					resolve({ exists: true, password: items[0].password });

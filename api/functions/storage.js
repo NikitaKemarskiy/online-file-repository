@@ -7,6 +7,9 @@ const get_size = require('get-folder-size');
 // Variables
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
+// Libraries
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
+
 // Functions
 const sort_items = function(items_array) { // Functions that sorts the items in the special order (folders first, files second)
 
@@ -47,7 +50,7 @@ const parse_items = function(items_path, items) { // Function that parses files 
 					fs.stat(item_path, function(error, stats) { // Getting info about current item
 
 						if (error) {
-							console.error(`Error: ${error.message}`);
+							logging.error(`Error: ${error.message}`);
 						} else {
 							if (stats.isDirectory()) { // Item is a folder
 								items_array.push({
@@ -93,7 +96,7 @@ const delete_items = function(items_path, items) { // Function that deletes file
 			if (items[i].type === 'folder') { // Item is a directory
 				exec('rm -r ' + item_path, function (error) {
 		  			if (error) {
-		  				console.error(`Error: ${error.message}`);
+		  				logging.error(`Error: ${error.message}`);
 		  			}
 		  			async_calls_counter++;
 
@@ -104,7 +107,7 @@ const delete_items = function(items_path, items) { // Function that deletes file
 			} else { // Item is a file
 				fs.unlink(item_path, function(error) {
 					if (error) {
-		  				console.error(`Error: ${error.message}`);
+		  				logging.error(`Error: ${error.message}`);
 		  			}
 					async_calls_counter++;
 
@@ -169,7 +172,7 @@ const show_storage = function(email) { // Function that shows main storage direc
 				fs.mkdir(user_path, function(error) { // Creating user's storage directory
 
 					if (error) {
-						console.error(`Error: ${error.message}`);
+						logging.error(`Error: ${error.message}`);
 						resolve([]); // Return empty array (no files inside a storage) 
 					} else {
 						resolve([]); // Return empty array (no files inside a storage)
@@ -189,7 +192,7 @@ const show_directory = function(directory_path) { // Function that shows directo
 		fs.readdir(user_path, function(error, items) {
 
 			if (error) {
-				console.error(`Error: ${error.message}`);
+				logging.error(`Error: ${error.message}`);
 				resolve([]);
 			} else if (items.length === 0) { // The folder is empty -> resolve empty array
 				resolve([]);
@@ -209,7 +212,7 @@ const get_parsed_size = function(user_path) { // Function that returns parsed di
 		get_size(user_path, function(error, size) {
 
 			if (error) {
-				console.error(`Error: ${error.message}`);
+				logging.error(`Error: ${error.message}`);
 				resolve(0);
 			} else {
 				resolve(parse_size(size));

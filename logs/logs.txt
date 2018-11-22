@@ -1,0 +1,2 @@
+Server is listening at localhost:1337
+MongoDB was successfully connected!

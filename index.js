@@ -7,14 +7,18 @@ const hbs = require('express-handlebars');
 const session = require('express-session');
 const socket_io = require('socket.io');
 
+// Libraries
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
+
 // Configuration
-const config_constructor = require('./config/config.js'); // We use constructor to pass session module
+const config_constructor = require(path.join(process.cwd(), 'config', 'config.js')); // We use constructor to pass session module
 const config = new config_constructor(session);
 
 // Initialization
 const server = express(); // Server
 const http_server = http.Server(server); // Socket.io server
 const io = socket_io.listen(http_server);
+logging.start_logging(); // Open writable streams for logging
 
 // Middleware
 server.engine('hbs', hbs({ extname: 'hbs' })); // Templating ("Handlebars") 
@@ -24,7 +28,8 @@ server.use(body_parser.urlencoded({ extended: true })); // Body parser to proces
 server.use(body_parser.json());
 server.use(session(config.session)); // Session
 
-server.use(express.static(path.join(process.cwd(), 'public'))); // Static files
+// Static files
+server.use(express.static(path.join(process.cwd(), 'public'))); 
 
 // Routes
 const routes = require('./api/routes/routes.js')(io, config); // Routing file (as an argument we pass socket.io object to use it inside)
@@ -38,8 +43,8 @@ server.use(function(req, res) { // Error 404
 // Express.js
 http_server.listen(config.server.port, config.server.host, function(error) {
 	if (error) {
-		console.error(`Server error: ${error.message}`);
+		logging.error(`Server error: ${error.message}`);
 	} else {
-		console.log(`Server is listening at ${config.server.host}:${config.server.port}`);
+		logging.log(`Server is listening at ${config.server.host}:${config.server.port}`);
 	}
 });

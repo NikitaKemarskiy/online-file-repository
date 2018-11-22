@@ -4,6 +4,9 @@ const path = require('path');
 // Constants
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
 
+// Functions
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
+
 // Socket constructor
 const socket = function(io, storage, database) {
 
@@ -11,7 +14,7 @@ const socket = function(io, storage, database) {
 	this.connection = function(socket) {
 
 		// Log to see a new user connected
-		console.log(`User was connected -> ${socket.id}`);
+		logging.log(`User was connected -> ${socket.id}`);
 
 		socket.on('show_directory', function(data) { // Show directory event handler
 			
@@ -30,7 +33,7 @@ const socket = function(io, storage, database) {
 			storage.create_directory(folder_path).then(function() {
 				io.sockets.connected[socket.id].emit('folder_created', {}); // Emitting socket event
 			}).catch(function(error) {
-				console.error(`Error: ${error.message}`);
+				logging.error(`Error: ${error.message}`);
 			});
 		});
 

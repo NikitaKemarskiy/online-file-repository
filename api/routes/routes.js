@@ -4,6 +4,9 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
+// Libraries
+const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
+
 // Constants
 const ARCHIVES_PATH = path.join(process.cwd(), 'storage', 'archives'); // Constant value for folder with archives
 const STORAGE_PATH = path.join(process.cwd(), 'storage', 'users'); // Constant value for storage folder
@@ -335,9 +338,9 @@ const router_init = function(io, config) {
 				// Deleting this archive
 				fs.unlink(archive_path, function(error) {
 					if (error) {
-						console.error(`Error: ${error.message}`);
+						logging.error(`Error: ${error.message}`);
 					} else {
-						console.log(`Archive was sent and deleted: ${archive_path}`);
+						logging.log(`Archive was sent and deleted: ${archive_path}`);
 					}
 				});
 			}); 
@@ -348,15 +351,15 @@ const router_init = function(io, config) {
 
 		upload(req, res, function(error) { // Calling function for files upload
 			if (error instanceof multer.MulterError) { // Error (invalid files)
-		    	console.error(`Error: ${error.message}`);
+		    	logging.error(`Error: ${error.message}`);
 		    	res.header('StatusCode', '400');
 		    	res.end('Error uploading files');
 		    } else if (error) { // Unhandled error in code
-		    	console.error(`Error: ${error.message}`);
+		    	logging.error(`Error: ${error.message}`);
 		    	res.header('StatusCode', '400');	
 		    	res.end('Error uploading files');
 		    } else { // Everything is ok
-				console.dir(req.files);
+				logging.dir(req.files);
 				res.end('Files were successfully uploaded');
 			}
 		});
