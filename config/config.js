@@ -6,13 +6,13 @@ const config = function(session) {
 
 	// Config
 	this.database = {
-		name: 'file_storage', // database name
-		host: 'localhost', // database host
-		port: '27017' // database port
+		name: 'file_storage', // Database name
+		host: 'localhost', // Database host
+		port: '27017' // Database port
 	};
 	this.server = {
-		host: 'localhost', // server host
-		port: '1337' // server port
+		host: 'localhost', // Server host
+		port: '1337' // Server port
 	};
 	this.session = {
 		name: 'session_id', // Name of session id value
@@ -28,6 +28,9 @@ const config = function(session) {
 	      	url: 'mongodb://localhost/file_storage_sessions'
 	    })
 	};
+	this.storage = {
+		limit: 4 * 1024 * 1024 * 1024 // User's storage size limit
+	}
 }
 
 module.exports = config;

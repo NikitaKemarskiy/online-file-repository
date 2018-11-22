@@ -149,6 +149,10 @@ div.header-storage {
 	left: -22%;
 }
 
+div.header-storage strong {
+	font-weight: normal;
+}
+
 div.header-button {
 	padding-top: 15px !important;
 }

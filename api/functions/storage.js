@@ -252,5 +252,6 @@ module.exports = {
 	create_directory,
 	delete_items,
 	show_storage,
-	show_directory
+	show_directory,
+	parse_size
 };

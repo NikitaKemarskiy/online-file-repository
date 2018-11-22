@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const get_size = require('get-folder-size');
 
 // Libraries
 const logging = require(path.join(process.cwd(), 'api', 'functions', 'logging.js')); // Functions for logging in logs files
@@ -38,6 +39,8 @@ const archiver_constructor = require('../archiver/archiver.js'); // Archiver fun
 // Routing initialization function
 const router_init = function(io, config) {
 
+	const STORAGE_LIMIT = storage.parse_size(config.storage.limit); // Constant value for user's storage size limit
+
 	// MongoDB
 	const database = require('../database/database.js');
 	database.connect(config.database.host, config.database.port, config.database.name);
@@ -72,6 +75,7 @@ const router_init = function(io, config) {
 							res.render(path.join(process.cwd(), 'public/html/main_admin.hbs'), {
 								user_email: req.session.email, 
 								storage_size: result.size,
+								storage_limit: STORAGE_LIMIT,
 								items: result.items,
 								emails: emails
 							});
@@ -81,6 +85,7 @@ const router_init = function(io, config) {
 						res.render(path.join(process.cwd(), 'public/html/main.hbs'), { 
 							user_email: req.session.email, 
 							storage_size: result.size,
+							storage_limit: STORAGE_LIMIT,
 							items: result.items
 						});
 					}
@@ -359,8 +364,38 @@ const router_init = function(io, config) {
 		    	res.header('StatusCode', '400');	
 		    	res.end('Error uploading files');
 		    } else { // Everything is ok
-				logging.dir(req.files);
-				res.end('Files were successfully uploaded');
+		    	logging.dir(req.files);
+		    	get_size(path.join(STORAGE_PATH, req.body.email), function(error, size) { // Find current user's storage size
+		    		if (error) {
+		    			logging.error(`Error: ${error.message}`);
+		    		} else {
+		    			let async_calls_counter = 0;
+
+		    			if (size > config.storage.limit) { // If user's storage size exceeds the limit
+
+		    				req.files.forEach(function(file) { // For every uploaded file
+
+		    					let file_path = path.join(file.destination, file.filename);
+		    					fs.unlink(file_path, function(error) { // Delete every uploaded file
+
+									async_calls_counter++;
+									
+									if (error) {
+										logging.error(`Error: ${error.message}`);
+									} else {
+										if (async_calls_counter >= req.files.length) { // All the files were deleted -> send response
+											logging.log(`Uploaded files were deleted because the storage size limit was exceeded`);
+											res.header('StatusCode', '400');
+		    								res.end('Error uploading files');
+										}
+									}
+								});
+		    				});
+		    			} else { // Everything is ok -> send response
+		    				res.end('Files were successfully uploaded');
+		    			}
+		    		}
+		    	});
 			}
 		});
 	});
