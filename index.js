@@ -20,6 +20,17 @@ const http_server = http.Server(server); // Socket.io server
 const io = socket_io.listen(http_server);
 logging.start_logging(); // Open writable streams for logging
 
+// Process listeners
+process.on('exit', function(code) { //  Exit the program listener
+	logging.log(`Closing the program... Status code: ${code}`);
+	logging.end_logging();
+});
+
+process.on('uncaughtException', function(error) { // Uncaught error listener
+	logging.error(`Error: ${error.message}`);
+	process.exit(1); // Exit the program with the status code 1 (error)
+});
+
 // Middleware
 server.engine('hbs', hbs({ extname: 'hbs' })); // Templating ("Handlebars") 
 server.set('view engine', 'hbs');
@@ -27,16 +38,13 @@ server.set('views', __dirname);
 server.use(body_parser.urlencoded({ extended: true })); // Body parser to process post requests
 server.use(body_parser.json());
 server.use(session(config.session)); // Session
-
-// Static files
-server.use(express.static(path.join(process.cwd(), 'public'))); 
+server.use(express.static(path.join(process.cwd(), 'public'))); // Static files
 
 // Routes
 const routes = require('./api/routes/routes.js')(io, config); // Routing file (as an argument we pass socket.io object to use it inside)
 server.use('/', routes); // Routing
 
-server.use(function(req, res) { // Error 404
-
+server.use(function(req, res, next) { // Error 404
 	res.status(404).send("Error 404: page not found");
 });
 

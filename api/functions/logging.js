@@ -29,8 +29,15 @@ const log = function(str) {
 	log_stream.write(str, 'utf8');
 }
 
+const dir = function(str) {
+	console.dir(str);
+	str = str.toString();
+	str = str.concat('\n');
+	log_stream.write(str, 'utf8');
+}
+
 const error = function(str) {
-	console.log(str);
+	console.error(str);
 	str = str.toString();
 	str = str.concat('\n');
 	error_stream.write(str, 'utf8');
@@ -40,5 +47,6 @@ module.exports = {
 	start_logging,
 	end_logging,
 	log,
+	dir,
 	error
 };

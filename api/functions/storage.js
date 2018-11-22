@@ -92,6 +92,7 @@ const delete_items = function(items_path, items) { // Function that deletes file
 		for (let i = 0; i < items.length; i++) {
 
 			let item_path = path.join(items_path, items[i].name);
+			item_path = item_path.replace(/ /g, '\\ ');
 
 			if (items[i].type === 'folder') { // Item is a directory
 				exec('rm -r ' + item_path, function (error) {
@@ -105,15 +106,15 @@ const delete_items = function(items_path, items) { // Function that deletes file
 		  			}
 				});
 			} else { // Item is a file
-				fs.unlink(item_path, function(error) {
-					if (error) {
+				exec('rm ' + item_path, function (error) {
+		  			if (error) {
 		  				logging.error(`Error: ${error.message}`);
 		  			}
-					async_calls_counter++;
+		  			async_calls_counter++;
 
-					if (async_calls_counter === items.length) {
-						resolve(true);
-					}
+		  			if (async_calls_counter === items.length) {
+		  				resolve(true);
+		  			}
 				});
 			}
 		}
