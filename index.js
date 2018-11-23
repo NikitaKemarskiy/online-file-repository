@@ -21,14 +21,24 @@ const io = socket_io.listen(http_server);
 logging.start_logging(); // Open writable streams for logging
 
 // Process listeners
-process.on('exit', function(code) { //  Exit the program listener
+process.on('exit', function(code) { // Exit the program listener
 	logging.log(`Closing the program... Status code: ${code}`);
 	logging.end_logging();
 });
 
 process.on('uncaughtException', function(error) { // Uncaught error listener
 	logging.error(`Error: ${error.message}`);
-	process.exit(1); // Exit the program with the status code 1 (error)
+	process.exit(1); // Exit the program with a status code 1 (error)
+});
+
+process.on('SIGTERM', () => { // SIGTERM Linux signal listener
+	logging.log('SIGTERM signal received.');
+	process.exit(0); // Exit the program with a status code 0 (success)
+});
+
+process.on('SIGINT', () => { // SIGINT Linux signal listener
+	logging.log('SIGINT signal received.');
+	process.exit(0); // Exit the program with a status code 0 (success)
 });
 
 // Middleware
